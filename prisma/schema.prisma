@@ -1,14 +1,319 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-}
-
+// 数据源配置：使用PostgreSQL数据库
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL") // 通过环境变量获取数据库连接地址
+}
+
+// 生成Prisma客户端
+generator client {
+  provider = "prisma-client-js" // 生成TypeScript客户端
+}
+
+// generator erd {
+//   provider = "prisma-erd-generator"
+//   output = "./erd.svg" 
+// }
+
+// 用户基本信息模型
+model User {
+  id               String         @id @default(uuid()) // 用户唯一标识
+  phone            String         @unique // 手机号（唯一登录凭证）
+  email            String?        @unique // 可选邮箱（唯一）
+  idNumber         String?        @unique // 身份证号（唯一，用于实名认证）
+  name             String // 真实姓名
+  age              Int // 年龄
+  role             Role           @default(USER) // 用户角色，默认为普通用户
+  gender           GenderType // 性别类型
+  height           Int // 身高（单位：厘米）
+  education        EducationType // 教育程度
+  occupation       String // 职业信息
+  income           Int // 年收入（单位：万元）
+  region           String // 所在地区
+  maritalStatus    MaritalType // 婚姻状况|家长
+  hobbies          String[] // 兴趣爱好标签（数组存储）
+  photos           String[] // 个人照片URL数组
+  constellation    Constellation? // 星座（可选）
+  mbti             MBTIType? // MBTI人格类型（可选）
+  createdAt        DateTime       @default(now()) // 创建时间
+  updatedAt        DateTime       @updatedAt // 最后更新时间
+  isProfileVisible Boolean        @default(true) // 是否展示个人信息，默认为 true
+
+  // 用户资产账户关系（1:1）
+  account   Account? @relation("UserAccount", fields: [accountId], references: [id])
+  accountId String?  @unique
+
+  // 会员等级关系（1:1）
+  membership Membership? @relation("UserMembership")
+
+  // 消息关系（1:N）
+  sentMessages     Message[] @relation("MessageSender") // 发送的消息
+  receivedMessages Message[] @relation("MessageReceiver") // 接收的消息
+
+  // 邀请系统相关
+  inviteCodes         InviteCode[] // 生成的邀请码（1:N）
+  invitationsSent     Invitation[] @relation("inviter") // 发出的邀请
+  invitationsReceived Invitation[] @relation("invitee") // 收到的邀请
+
+  // 交易记录（1:N）
+  transactions  Transaction[]
+  AdViewLog     AdViewLog[]
+  DailyCheckIn  DailyCheckIn[]
+  UserActionLog UserActionLog[]
+
+  // 复合索引：常用查询字段优化
+  @@index([region, age, income])
+}
+
+// 用户账户模型（小花货币系统）
+model Account {
+  id           String        @id @default(uuid())
+  balance      Int           @default(0) // 账户余额（小花数量）
+  user         User?         @relation("UserAccount") // 所属用户
+  transactions Transaction[] // 所有交易记录
+}
+
+// 会员等级模型
+model Membership {
+  id         String   @id @default(uuid())
+  level      Int      @default(1) // 会员等级（类似B站等级）
+  exp        Int      @default(0) // 经验值
+  validUntil DateTime // 会员有效期
+  user       User?    @relation("UserMembership", fields: [userId], references: [id])
+  userId     String?  @unique // 关联用户
+
+  MembershipBenefit MembershipBenefit[]
+}
+
+// 消息系统模型
+model Message {
+  id           String        @id @default(uuid())
+  content      String // 消息内容
+  flowersUsed  Int           @default(10) // 发送消耗的小花数量
+  sender       User          @relation("MessageSender", fields: [senderId], references: [id])
+  senderId     String // 发送者ID
+  receiver     User          @relation("MessageReceiver", fields: [receiverId], references: [id])
+  receiverId   String // 接收者ID
+  isRead       Boolean       @default(false) // 是否已读
+  createdAt    DateTime      @default(now()) // 发送时间
+  transactions Transaction[] // 关联的交易记录
+}
+
+// 邀请码系统
+model InviteCode {
+  id        String   @id @default(uuid())
+  code      String   @unique // 唯一邀请码
+  creator   User     @relation(fields: [creatorId], references: [id])
+  creatorId String // 创建者ID
+  isUsed    Boolean  @default(false) // 是否已被使用
+  createdAt DateTime @default(now()) // 创建时间
+}
+
+// 邀请关系模型
+model Invitation {
+  id             String        @id @default(uuid())
+  inviter        User          @relation("inviter", fields: [inviterId], references: [id])
+  inviterId      String // 邀请人ID
+  invitee        User          @relation("invitee", fields: [inviteeId], references: [id])
+  inviteeId      String // 被邀请人ID
+  flowersAwarded Boolean       @default(false) // 是否已发放奖励
+  createdAt      DateTime      @default(now()) // 邀请时间
+  transactions   Transaction[] // 奖励发放记录
+
+  // 唯一约束：避免重复邀请
+  @@unique([inviterId, inviteeId])
+}
+
+// 交易系统模型
+model Transaction {
+  id          String      @id @default(uuid())
+  type        TransType // 交易类型（充值/消费/奖励等）
+  amount      Int // 交易金额（小花数量）
+  status      TransStatus @default(PENDING) // 交易状态
+  description String? // 交易描述（可选）
+  metadata    Json? // 附加数据（如广告ID、签到日期等）
+  preBalance  Int // 交易前余额
+  postBalance Int // 交易后余额
+
+  // 关联账户
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId String
+
+  // 关联用户（可选）
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  // 关联消息（消费场景）
+  message   Message? @relation(fields: [messageId], references: [id])
+  messageId String?
+
+  // 关联邀请奖励（邀请场景）
+  invitation   Invitation? @relation(fields: [invitationId], references: [id])
+  invitationId String?
+}
+
+// 新增每日签到模型
+model DailyCheckIn {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  date          DateTime @db.Date // 使用PostgreSQL的date类型存储签到日期
+  earnedFlowers Int      @default(10) // 每日签到获得的小花数量
+  createdAt     DateTime @default(now())
+
+  // 唯一约束：确保用户每天只能签到一次
+  @@unique([userId, date])
+  // 索引优化：按用户查询签到记录
+  @@index([userId])
+}
+
+// 新增广告观看记录模型
+model AdViewLog {
+  id            String      @id @default(uuid())
+  user          User        @relation(fields: [userId], references: [id])
+  userId        String
+  adId          String // 广告唯一标识
+  earnedFlowers Int         @default(5) // 观看获得的基准小花数量
+  status        AdLogStatus @default(PENDING) // 奖励发放状态
+  viewedAt      DateTime    @default(now())
+  metadata      Json? // 存储广告时长、类型等元数据
+
+  // 索引优化
+  @@index([adId])
+  @@index([viewedAt])
+}
+
+// 新增会员权益关联表
+model MembershipBenefit {
+  id           String      @id @default(uuid())
+  membership   Membership  @relation(fields: [membershipId], references: [id])
+  membershipId String
+  benefitType  BenefitType // 权益类型
+  value        Int // 权益数值（百分比或固定值）
+  validFrom    DateTime    @default(now()) // 权益生效时间
+  validUntil   DateTime? // 权益失效时间（可选）
+  description  String? // 权益详细说明
+  createdAt    DateTime    @default(now())
+
+  // 索引优化
+  @@index([membershipId])
+  @@index([benefitType])
+}
+
+// 新增用户行为日志表
+model UserActionLog {
+  id         String     @id @default(uuid())
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String
+  actionType ActionType // 用户行为类型
+  timestamp  DateTime   @default(now())
+  ipAddress  String? // 用户操作时的IP地址
+  deviceInfo Json? // 设备信息（OS、浏览器、设备型号等）
+  details    Json? // 操作详情（如消息内容长度等）
+
+  // 索引优化
+  @@index([userId])
+  @@index([actionType])
+  @@index([timestamp])
+}
+
+// 新增枚举类型
+enum AdLogStatus {
+  PENDING // 待处理
+  SUCCESS // 奖励发放成功
+  FAILED // 奖励发放失败
+}
+
+enum BenefitType {
+  SIGN_IN_BONUS // 签到奖励加成（百分比）
+  AD_REVENUE_BONUS // 广告收益加成（百分比）
+  MESSAGE_DISCOUNT // 消息发送折扣（百分比）
+  DAILY_FLOWER_CAP // 每日小花获取上限提升（固定值）
+}
+
+enum ActionType {
+  LOGIN // 用户登录
+  LOGOUT // 用户登出
+  SEND_MESSAGE // 发送消息
+  VIEW_AD // 观看广告
+  SIGN_IN // 每日签到
+  VIEW_PROFILE // 查看他人资料
+  UPDATE_INFO // 修改个人信息
+}
+
+// 枚举类型定义
+enum GenderType {
+  MALE // 男性
+  FEMALE // 女性
+}
+
+enum EducationType {
+  PRIMARY_SCHOOL // 小学
+  JUNIOR_HIGH_SCHOOL // 初中
+  HIGH_SCHOOL // 高中
+  BACHELOR // 本科
+  MASTER // 硕士
+  DOCTOR // 博士
+}
+
+enum MaritalType {
+  SINGLE // 未婚
+  DIVORCED // 离异
+  WIDOWED // 丧偶
+  PARENT // 家长
+}
+
+enum TransType {
+  RECHARGE // 充值
+  CONSUME // 消费（如发送消息）
+  REWARD // 奖励（邀请奖励、签到等）
+  REFUND // 退款
+  TRANSFER // 转账
+  AD_REVENUE // 广告收益
+}
+
+enum TransStatus {
+  PENDING // 待处理
+  SUCCESS // 成功
+  FAILED // 失败
+  ROLLBACK // 已回滚
+}
+
+enum MBTIType {
+  ISTJ
+  ISFJ
+  INFJ
+  INTJ
+  ISTP
+  ISFP
+  INFP
+  INTP
+  ESTP
+  ESFP
+  ENFP
+  ENTP
+  ESTJ
+  ESFJ
+  ENFJ
+  ENTJ
+}
+
+enum Constellation {
+  ARIES // 白羊座
+  TAURUS // 金牛座
+  GEMINI // 双子座
+  CANCER // 巨蟹座
+  LEO // 狮子座
+  VIRGO // 处女座
+  LIBRA // 天秤座
+  SCORPIO // 天蝎座
+  SAGITTARIUS // 射手座
+  CAPRICORN // 摩羯座
+  AQUARIUS // 水瓶座
+  PISCES // 双鱼座
+}
+
+enum Role {
+  USER // 普通用户
+  ADMIN // 管理员(查,核对信息)
+  SUPER_ADMIN // 超级管理员(增删改差,核对信息)
 }
