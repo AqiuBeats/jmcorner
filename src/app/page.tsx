@@ -7,6 +7,8 @@ const Page = async () => {
   // const session = await auth();
   // if (!session) redirect("/auth/login");
 
+  redirect("/auth/login");
+
   return (
     <>
       <div className="bg-gray-100 rounded-lg p-4 text-center mb-6">
