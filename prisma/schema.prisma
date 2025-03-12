@@ -18,18 +18,21 @@ generator client {
 model User {
   id               String         @id @default(uuid()) // 用户唯一标识
   phone            String         @unique // 手机号（唯一登录凭证）
+  password         String // 存储哈希后的密码
+  //其他字段
   email            String?        @unique // 可选邮箱（唯一）
   idNumber         String?        @unique // 身份证号（唯一，用于实名认证）
-  name             String // 真实姓名
-  age              Int // 年龄
+  name             String? // 真实姓名
+  nickname         String? // 昵称
+  age              Int? // 年龄
   role             Role           @default(USER) // 用户角色，默认为普通用户
-  gender           GenderType // 性别类型
-  height           Int // 身高（单位：厘米）
-  education        EducationType // 教育程度
-  occupation       String // 职业信息
-  income           Int // 年收入（单位：万元）
-  region           String // 所在地区
-  maritalStatus    MaritalType // 婚姻状况|家长
+  gender           GenderType? // 性别类型
+  height           Int? // 身高（单位：厘米）
+  education        EducationType? // 教育程度
+  occupation       String? // 职业信息
+  income           Int? // 年收入（单位：万元）
+  region           String? // 所在地区
+  maritalStatus    MaritalType? // 婚姻状况|家长
   hobbies          String[] // 兴趣爱好标签（数组存储）
   photos           String[] // 个人照片URL数组
   constellation    Constellation? // 星座（可选）
@@ -38,9 +41,13 @@ model User {
   updatedAt        DateTime       @updatedAt // 最后更新时间
   isProfileVisible Boolean        @default(true) // 是否展示个人信息，默认为 true
 
+  // next-auth必要字段
+  accounts Account[]
+  sessions Session[]
+
   // 用户资产账户关系（1:1）
-  account   Account? @relation("UserAccount", fields: [accountId], references: [id])
-  accountId String?  @unique
+  flowerAccount   FlowerAccount? @relation("UserFlowerAccount", fields: [flowerAccountId], references: [id])
+  flowerAccountId String?        @unique
 
   // 会员等级关系（1:1）
   membership Membership? @relation("UserMembership")
@@ -64,11 +71,38 @@ model User {
   @@index([region, age, income])
 }
 
-// 用户账户模型（小花货币系统）
+// 以下为next-auth要求的固定模型
 model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// 用户账户模型（小花货币系统）
+model FlowerAccount {
   id           String        @id @default(uuid())
   balance      Int           @default(0) // 账户余额（小花数量）
-  user         User?         @relation("UserAccount") // 所属用户
+  user         User?         @relation("UserFlowerAccount") // 所属用户
   transactions Transaction[] // 所有交易记录
 }
 
@@ -135,8 +169,8 @@ model Transaction {
   postBalance Int // 交易后余额
 
   // 关联账户
-  account   Account @relation(fields: [accountId], references: [id])
-  accountId String
+  flowerAccount   FlowerAccount @relation(fields: [flowerAccountId], references: [id])
+  flowerAccountId String
 
   // 关联用户（可选）
   user   User?   @relation(fields: [userId], references: [id])
