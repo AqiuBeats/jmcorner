@@ -1,21 +1,32 @@
-// import  auth from "@/lib/auth";
-// import { console } from "inspector";
-import { redirect } from "next/navigation";
+'use client';
 
-const Page = async () => {
-  // console.log('page',auth)
-  // const session = await auth();
-  // if (!session) redirect("/auth/login");
+import { redirect } from 'next/navigation';
+import { useSession} from 'next-auth/react';
+import { User } from '@prisma/client';
+import { timeUTCToCN } from '@/lib/timeUtils';
 
-  redirect("/auth/login");
+const Page = () => {
+  const { data: session, status } = useSession();
+  // console.log('session', session);
+  const userInfo = session?.user as User;
+  // const signOut = async () => {
+  //   console.log('signOut');
+  // };
+  if (!session) {
+    redirect('/auth/login');
+  }
+
+  if (!session.user) {
+    return <div>User information is missing</div>;
+  }
 
   return (
-    <>
-      <div className="bg-gray-100 rounded-lg p-4 text-center mb-6">
-        <p className="text-gray-600">Signed in as:</p>
-        {/* <p className="font-medium">{session.user?.email}</p> */}
-      </div>
-    </>
+    <div>
+      Signed in as A{userInfo.phone || 'Unknown'} <br />
+      创建时间是{timeUTCToCN(userInfo.createdAt, '-')}
+      <br />
+      {/* <button onClick={() => signOut()}>Sign out</button> */}
+    </div>
   );
 };
 

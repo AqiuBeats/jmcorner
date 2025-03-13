@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "antd";
 import { useTranslation } from "react-i18next";
 
-import { SvgIcon } from "@/components/icon";
+import { SvgIcon } from "@/components/login/icon";
 
 import { ReturnButton } from "./components/ReturnButton";
 // import { LoginStateEnum, useLoginStateContext } from "./providers/LoginStateProvider";

@@ -2,13 +2,22 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
-// import bcrypt from 'bcrypt';
 import bcrypt from 'bcryptjs';
+import CryptoJS from 'crypto-js';
+
+const adapter = PrismaAdapter(prisma);
+const secretKey = process.env.AES_SECRET_KEY || '';
+const expTime = 7 * 24 * 60 * 60; // 7天 过期时间
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // debug: true, // 启用调试模式
+  adapter,
   session: {
     strategy: 'jwt',
+    maxAge: expTime,
+  },
+  jwt: {
+    maxAge: expTime,
   },
   providers: [
     CredentialsProvider({
@@ -21,28 +30,33 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.phone || !credentials?.password) {
           throw new Error('Invalid credentials');
         }
-
         const user = await prisma.user.findUnique({
           where: { phone: credentials.phone },
         });
-
-        if (
-          !user ||
-          !(await bcrypt.compare(credentials.password, user.password))
-        ) {
-          throw new Error('Invalid credentials');
+        try {
+          const bytes = CryptoJS.AES.decrypt(credentials.password, secretKey);
+          const decode_pwd = bytes.toString(CryptoJS.enc.Utf8);
+          if (!user || !(await bcrypt.compare(decode_pwd, user.password))) {
+            throw new Error('Invalid credentials');
+          }
+        } catch (error) {
+          throw new Error('解密失败');
         }
-
+        if (user) {
+          user.password = '';
+        }
         return user;
       },
     }),
   ],
   pages: {
     signIn: '/auth/login',
-    signOut: '/auth/logout',
   },
   callbacks: {
     async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id; // 添加用户 ID 到 JWT
+      }
       return { ...token, ...user };
     },
     async session({ session, token }) {
