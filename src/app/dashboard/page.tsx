@@ -16,7 +16,7 @@ export default function DashboardPage() {
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
-      <p>Welcome, {session.user?.phone}</p>
+      <p>Welcome</p>
       <button
         onClick={() => signOut()}
         className="mt-4 bg-red-500 text-white p-2 rounded"

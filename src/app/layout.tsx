@@ -3,7 +3,7 @@ import './globals.css';
 
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import SessionProviderWrapper from '@/components/session/SessionProviderWrapper';
+import SessionProviderWrapper from '@/components/login/session/SessionProviderWrapper';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
