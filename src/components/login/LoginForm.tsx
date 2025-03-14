@@ -1,14 +1,25 @@
-import { Alert, Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
+'use client';
+import { Checkbox, Col, Divider, Form, Input, Row } from 'antd';
 import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai';
 import { DEFAULT_USER } from '@/_mock/assets';
 import { signIn } from 'next-auth/react';
 import CryptoJS from 'crypto-js';
 import { redirect } from 'next/navigation';
+import { useState } from 'react';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 function LoginForm() {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+
   const secretKey = process.env.AES_SECRET_KEY || '';
   const handleClickLogin = async () => {
+    // toast.success('Success!', {
+    //   description: 'Your action was completed successfully.',
+    // });
+    setLoading(true);
     const values = form.getFieldsValue();
     const pwd = values.password;
     values.password = CryptoJS.AES.encrypt(pwd, secretKey).toString(); // 替换密码为加密后的密码
@@ -19,8 +30,15 @@ function LoginForm() {
       json: true,
     });
     if (result?.ok) {
-      redirect('/');
+      toast.success('', {
+        description: '登录成功!',
+      });
+      // setTimeout(() => {
+      //   redirect('/');
+      // }, 1000);
+      // redirect('/');
     }
+    setLoading(false);
   };
 
   const handleClickRegister = async () => {
@@ -103,34 +121,61 @@ function LoginForm() {
               </Form.Item>
             </Col>
             <Col span={12} className="text-right">
-              <Button type="link" className="!underline" size="small">
+              {/* <Button type="link" className="!underline" size="small">
                 {'忘记密码?'}
-              </Button>
+              </Button> */}
             </Col>
           </Row>
         </Form.Item>
         <Form.Item>
-          {/* loading={loading} w-full*/}
-          {/* <Button type="primary" htmlType="submit" name="action" value="login" className="w-full">
+          {/* <Button
+            onClick={handleClickLogin}
+            type="primary"
+            htmlType="submit"
+            className="w-full"
+            loading={loading}
+          >
             {'登 录'}
           </Button> */}
-          <Button type="primary" onClick={handleClickLogin}>
+
+          <Button
+            onClick={handleClickLogin}
+            disabled={loading}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" />
+                请稍等...
+              </>
+            ) : (
+              '登 录'
+            )}
+          </Button>
+
+          {/* <Button type="primary" onClick={handleClickLogin}>
             {'登 录'}
           </Button>
           <Button type="primary" onClick={handleClickRegister}>
             {'注 册'}
-          </Button>
+          </Button> */}
         </Form.Item>
 
         <Row align="middle" gutter={8}>
           <Col span={9} flex="1">
-            <Button className="w-full !text-sm">{'手机登录'}</Button>
+            <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              {'手机登录'}
+            </Button>
           </Col>
           <Col span={9} flex="1">
-            <Button className="w-full !text-sm">{'二维码登录'}</Button>
+            <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              {'二维码登录'}
+            </Button>
           </Col>
           <Col span={6} flex="1">
-            <Button className="w-full !text-sm">{'注册'}</Button>
+            <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              {'注册'}
+            </Button>
           </Col>
         </Row>
 

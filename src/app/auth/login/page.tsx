@@ -34,10 +34,10 @@ function Login() {
   // }
 
   //   const gradientBg = rgbAlpha(themeVars.colors.background.defaultChannel, 0.9);
-  const bg = `linear-gradient(135deg, rgba(var(--colors-palette-primary-lightChannel), .2), rgba(var(--colors-palette-primary-defaultChannel), .2)) var(--colors-common-white)`;
+  // const bg = `linear-gradient(135deg, rgba(var(--colors-palette-primary-lightChannel), .2), rgba(var(--colors-palette-primary-defaultChannel), .2)) var(--colors-common-white)`;
 
   return (
-    <Layout className="relative flex !min-h-screen !w-full !flex-row bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+    <div className="relative flex !min-h-screen !w-full !flex-row bg-[#ffe8e4]">
       {/* <div
 				className="hidden grow flex-col items-center justify-center gap-[80px] bg-center  bg-no-repeat md:flex"
 				style={{
@@ -53,7 +53,7 @@ function Login() {
 
       <div
         className="m-auto flex !h-screen w-full max-w-[480px] flex-col justify-center px-[16px] lg:px-[64px]
-	   "
+	    bg-gradient-to-t from-[#ffe8e4] to-[#ffe8e4]/70"
       >
         {/* <LoginStateProvider> */}
 
@@ -70,7 +70,7 @@ function Login() {
         {/* <LocalePicker /> */}
         {/* <SettingButton /> */}
       </div>
-    </Layout>
+    </div>
   );
 }
 export default Login;
