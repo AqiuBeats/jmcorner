@@ -3,14 +3,15 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import CryptoJS from 'crypto-js';
 import { DefaultSession } from 'next-auth';
 import jwt from 'jsonwebtoken';
+import { EXP_TIME } from '@/utils/constants';
+import { decodeAESData } from '@/utils/aesUtils';
 
 const adapter = PrismaAdapter(prisma);
-const secretKey = process.env.AES_SECRET_KEY || '';
-const expTime = 1 * 24 * 60 * 60; // 1天 session过期时间
-const tokenExpTime = 1 * 24 * 60 * 60; // 1天 token过期时间
+
+const expTime = EXP_TIME;
+const tokenExpTime = EXP_TIME;
 
 declare module 'next-auth' {
   interface Session {
@@ -42,6 +43,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        console.log('credentials', credentials);
         if (!credentials?.phone || !credentials?.password) {
           throw new Error('Invalid credentials');
         }
@@ -52,8 +54,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error('用户不存在');
         }
         try {
-          const bytes = CryptoJS.AES.decrypt(credentials.password, secretKey);
-          const decode_pwd = bytes.toString(CryptoJS.enc.Utf8);
+          const decode_pwd = decodeAESData(credentials.password);
           if (!user || !(await bcrypt.compare(decode_pwd, user.password))) {
             throw new Error('密码错误');
           }

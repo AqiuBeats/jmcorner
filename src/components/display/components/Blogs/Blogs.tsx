@@ -62,7 +62,7 @@ const Blogs: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {BlogsData.map((blog) => {
               return (
-                  <div className="flex flex-col items-center justify-center gap-6 p-5 max-w-[300px] mx-auto shadow-lg rounded-md bg-white hover:-translate-y-2 duration-300">
+                  <div key={blog.id} className="flex flex-col items-center justify-center gap-6 p-5 max-w-[300px] mx-auto shadow-lg rounded-md bg-white hover:-translate-y-2 duration-300">
                     <img src={blog.image.src} alt={blog.title} />
                     <div className="space-y-2">
                       <h1 className="text-xl font-bold line-clamp-2">

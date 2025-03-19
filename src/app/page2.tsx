@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 import { useSession} from 'next-auth/react';
 import { User } from '@prisma/client';
-import { timeUTCToCN } from '@/lib/timeUtils';
+import { timeUTCToCN } from '@/utils/timeUtils';
 
 const Page = () => {
   const { data: session, status } = useSession();

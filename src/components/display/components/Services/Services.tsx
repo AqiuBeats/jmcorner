@@ -46,7 +46,7 @@ const Services = () => {
           </motion.h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {ServicesData.map((service) => (
-                <motion.div
+                <motion.div key={service.id}
                   className="flex flex-col justify-center items-center p-5 max-w-[300px] mx-auto shadow-lg rounded-xl bg-white"
                   variants={fadeUp(service.dealy)}
                   initial="hidden"

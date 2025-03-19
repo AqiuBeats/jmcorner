@@ -19,7 +19,7 @@ import QrCodeFrom from '@/components/login/QrCodeForm';
 import RegisterForm from '@/components/login/RegisterForm';
 import ResetForm from '@/components/login/ResetForm';
 
-// import { LoginStateProvider } from "@/components/login/providers/LoginStateProvider";
+import { LoginStateProvider } from "@/components/login/components/LoginStateProvider";
 
 // const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
@@ -55,15 +55,13 @@ function Login() {
         className="m-auto flex !h-screen w-full max-w-[480px] flex-col justify-center px-[16px] lg:px-[64px]
 	    bg-gradient-to-t from-[#ffe8e4] to-[#ffe8e4]/70"
       >
-        {/* <LoginStateProvider> */}
-
-        <LoginForm />
-        {/* <MobileForm /> */}
-        {/* <QrCodeFrom /> */}
-        {/* <RegisterForm /> */}
-        {/* <ResetForm /> */}
-
-        {/* </LoginStateProvider> */}
+        <LoginStateProvider>
+          <LoginForm />
+          {/* <MobileForm /> */}
+          {/* <QrCodeFrom /> */}
+          <RegisterForm />
+          {/* <ResetForm /> */}
+        </LoginStateProvider>
       </div>
 
       <div className="absolute right-2 top-0 flex flex-row">

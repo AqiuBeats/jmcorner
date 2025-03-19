@@ -40,6 +40,7 @@ model User {
   createdAt        DateTime       @default(now()) // 创建时间
   updatedAt        DateTime       @updatedAt // 最后更新时间
   isProfileVisible Boolean        @default(true) // 是否展示个人信息，默认为 true
+  token            String? // token
 
   // next-auth必要字段
   accounts Account[]

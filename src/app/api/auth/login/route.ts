@@ -1,44 +1,32 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import bcrypt from 'bcryptjs';
-import { signIn } from 'next-auth/react';
+import { usersRepo } from '@/helpers';
+import { apiHandler, setJson } from '@/helpers/api';
+import joi from 'joi';
 
-export async function POST(req: Request) {
-  try {
-    const { phone, password } = await req.json();
-    console.log('phone', phone, password);
-    if (!phone || !password) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
-    }
-
-    const result = await signIn('credentials', {
-      redirect: false,
-      phone,
-      password,
+const login = apiHandler(
+  async (req: { json: () => any }) => {
+    const body = await req.json();
+    const result = await usersRepo.authenticate(body);
+    return setJson({
+      data: result,
+      message: '登录成功',
     });
+  },
+  {
+    schema: joi.object({
+      phone: joi
+        .string()
+        .pattern(/^1[3-9]\d{9}$/) // 校验手机号
+        .required(),
+      // password: joi
+      //   .string()
+      //   .min(6) // 密码至少 6 位数
+      //   .required(),
+    }),
+  },
+);
 
-    if (result?.error) {
-      // res.status(401).json({ message: result.error });
-      return NextResponse.json({ error: result.error }, { status: 401 });
-    } else {
-      // res.status(200).json({ message: 'Login successful' });
-      return NextResponse.json({ error: 'successful' }, { status: 200 });
-    }
-
-    // const existingUser = await prisma.user.findUnique({ where: { phone } });
-    // if (existingUser) {
-    //   return NextResponse.json(
-    //     { error: 'User already exists' },
-    //     { status: 400 },
-    //   );
-    // }
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    // await prisma.user.create({
-    //   data: { phone, password: hashedPassword },
-    // });
-    // return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
+// 导出一个异步函数，用于处理 POST 请求，并返回一个包含用户信息的 JSON 响应。
+export const POST = login;
+//这行代码用于配置 Next.js 的动态渲染行为。表示强制将此路由标记为动态路由，即使它可能包含一些静态内容。
+//这种设置通常用于需要在服务器端动态生成内容的场景，确保每次请求都由服务器处理，而不是提前静态生成。
+export const dynamic = 'force-dynamic';

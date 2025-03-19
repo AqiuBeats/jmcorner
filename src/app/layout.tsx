@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import SessionProviderWrapper from '@/components/login/session/SessionProviderWrapper';
 import { ToastProviders } from '@/components/ui/toast';
+import QueryProviderWrapper from '@/components/providers/QueryProviderWrapper';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -22,7 +23,9 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <SessionProviderWrapper session={session}>
-          <ToastProviders>{children}</ToastProviders>
+          <ToastProviders>
+            <QueryProviderWrapper>{children}</QueryProviderWrapper>
+          </ToastProviders>
         </SessionProviderWrapper>
       </body>
     </html>
