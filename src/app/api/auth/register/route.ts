@@ -1,36 +1,28 @@
-import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
-import bcrypt from 'bcryptjs';
-import CryptoJS from 'crypto-js';
+import { usersRepo } from '@/helpers';
+import { apiHandler, setJson } from '@/helpers/api';
+import joi from 'joi';
 
-const secretKey = process.env.AES_SECRET_KEY || '';
+const register = apiHandler(
+  async (req: { json: () => any }) => {
+    const body = await req.json();
+    const result = await usersRepo.create(body);
+    return setJson({
+      data: result,
+    });
+  },
+  {
+    schema: joi.object({
+      phone: joi
+        .string()
+        .pattern(/^1[3-9]\d{9}$/) // 校验手机号
+        .required(),
+      // password: joi
+      //   .string()
+      //   .min(6) // 密码至少 6 位数
+      //   .required(),
+    }),
+  },
+);
 
-export async function POST(req: Request) {
-  try {
-    const { phone, password } = await req.json();
-    if (!phone || !password) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
-    }
-    const existingUser = await prisma.user.findUnique({ where: { phone } });
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'User already exists' },
-        { status: 400 },
-      );
-    }
-    try {
-      const bytes = CryptoJS.AES.decrypt(password, secretKey);
-      const decode_pwd = bytes.toString(CryptoJS.enc.Utf8);
-      const hashedPassword = await bcrypt.hash(decode_pwd, 10);
-      await prisma.user.create({
-        data: { phone, password: hashedPassword },
-      });
-      return NextResponse.json({ success: true });
-    } catch (error) {
-      console.error('解密失败：', error);
-      return NextResponse.json({ error: '解密失败' }, { status: 500 });
-    }
-  } catch (error) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
-  }
-}
+export const POST = register;
+export const dynamic = 'force-dynamic';

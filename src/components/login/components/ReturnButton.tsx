@@ -1,18 +1,22 @@
-import { Button } from "antd";
+import { Button } from 'antd';
 // import { useTranslation } from "react-i18next";
-import { MdArrowBackIosNew } from "react-icons/md";
+import { MdArrowForwardIos, MdArrowBackIosNew } from 'react-icons/md';
 
 interface ReturnButtonProps {
-	onClick?: () => void;
+  iconType: 'forward' | 'back';
+  title: string;
+  onClick: () => void;
 }
-export function ReturnButton({ onClick }: ReturnButtonProps) {
-	// const { t } = useTranslation();
-	return (
-		<Button block type="link" onClick={onClick}>
-			<div className="flex items-center justify-center hover:underline">
-				<MdArrowBackIosNew />
-				<span className="text-sm">{("sys.login.backSignIn")}</span>
-			</div>
-		</Button>
-	);
+
+export function ReturnButton({ iconType, title, onClick }: ReturnButtonProps) {
+  // const { t } = useTranslation();
+  return (
+    <Button block type="link" onClick={onClick}>
+      <div className="flex items-center justify-center hover:underline">
+        {iconType === 'forward' && <MdArrowForwardIos />}
+        {iconType === 'back' && <MdArrowBackIosNew />}
+        <span className="text-sm">{title}</span>
+      </div>
+    </Button>
+  );
 }

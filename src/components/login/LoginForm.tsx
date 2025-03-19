@@ -1,45 +1,73 @@
-import { Alert, Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
+'use client';
+import { Checkbox, Col, Divider, Form, Input, Row } from 'antd';
 import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai';
 import { DEFAULT_USER } from '@/_mock/assets';
 import { signIn } from 'next-auth/react';
 import CryptoJS from 'crypto-js';
 import { redirect } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { encodeAESData } from '@/utils/aesUtils';
+import {
+  LoginStateEnum,
+  useLoginStateContext,
+} from '@/components/login/components/LoginStateProvider';
+import { ReturnButton } from './components/ReturnButton';
+import { useLoginMutation } from '@/helpers/request';
 
 function LoginForm() {
+  const { loginState, setLoginState } = useLoginStateContext();
+
+  const {
+    mutate: login,
+    data,
+    isSuccess,
+    isError,
+    isPending, // 替换 isLoading
+    error,
+  } = useLoginMutation();
+
+  type Error = {
+    message: string;
+    status: string;
+    data: any;
+  };
+
+  // 将 useEffect 移到条件语句之前
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('登录成功!');
+    }
+    if (isError) {
+      toast.error('登录失败:' + error + data);
+    }
+  }, [isSuccess, isError]);
+
+  if (loginState !== LoginStateEnum.LOGIN) return null;
+
   const [form] = Form.useForm();
-  const secretKey = process.env.AES_SECRET_KEY || '';
   const handleClickLogin = async () => {
     const values = form.getFieldsValue();
     const pwd = values.password;
-    values.password = CryptoJS.AES.encrypt(pwd, secretKey).toString(); // 替换密码为加密后的密码
-    const result = await signIn('credentials', {
-      redirect: false,
-      ...values,
-      callbackUrl: '/',
-      json: true,
-    });
-    if (result?.ok) {
-      redirect('/');
-    }
-  };
-
-  const handleClickRegister = async () => {
-    const values = form.getFieldsValue();
-    const pwd = values.password;
-    values.password = CryptoJS.AES.encrypt(pwd, secretKey).toString(); // 替换密码为加密后的密码
-    console.log('values', values);
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
-    console.log('res', res);
-
-    if (res.ok) {
-      // await signIn('credentials', values);
-    } else {
-      alert('注册失败，请检查输入');
-    }
+    values.password = encodeAESData(pwd);
+    login(values);
+    // const result = await signIn('credentials', {
+    //   redirect: false,
+    //   ...values,
+    //   callbackUrl: '/',
+    //   json: true,
+    // });
+    // if (result?.ok) {
+    //   toast.success('', {
+    //     description: '登录成功!',
+    //   });
+    //   // setTimeout(() => {
+    //   //   redirect('/');
+    //   // }, 1000);
+    //   // redirect('/');
+    // }
   };
 
   return (
@@ -51,49 +79,32 @@ function LoginForm() {
         size="large"
         initialValues={{
           remember: true,
-          phone: '13147173415',
-          password: DEFAULT_USER.password,
+          // phone: '13147173415',
+          // password: DEFAULT_USER.password,
           // action: 'login',
         }}
         // onFinish={handleFinish}
       >
-        {/* <div className="mb-4 flex flex-col">
-          <Alert
-            description={
-              <div className="flex flex-col">
-                <div className="flex">
-                  <span className="flex-shrink-0 text-text-disabled">
-                    {'账号'}:
-                  </span>
-                  <span className="ml-1 text-text-secondary">
-                    {DEFAULT_USER.username}
-                  </span>
-                </div>
-                <div className="flex">
-                  <span className="flex-shrink-0 text-text-disabled">
-                    {'密码'}:
-                  </span>
-                  <span className="ml-1 text-text-secondary">
-                    {DEFAULT_USER.password}
-                  </span>
-                </div>
-              </div>
-            }
-            showIcon
-          />
-        </div> */}
-
         <Form.Item
           name="phone"
-          rules={[{ required: true, message: '请输入账号' }]}
+          rules={[
+            { required: true, message: '请输入手机号' },
+            {
+              pattern: /^1[3-9]\d{9}$/,
+              message: '请输入有效的手机号',
+            },
+          ]}
         >
-          <Input placeholder={'账号'} />
+          <Input placeholder={'手机号'} />
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: '请输入密码' }]}
+          rules={[
+            { required: true, message: '请输入密码' },
+            { min: 6, message: '密码必须至少 6 位' },
+          ]}
         >
-          <Input.Password type="password" placeholder={'密码'} />
+          <Input.Password placeholder={'密码'} />
         </Form.Item>
         <Form.Item>
           <Row align="middle">
@@ -103,44 +114,78 @@ function LoginForm() {
               </Form.Item>
             </Col>
             <Col span={12} className="text-right">
-              <Button type="link" className="!underline" size="small">
+              {/* <Button type="link" className="!underline" size="small">
                 {'忘记密码?'}
-              </Button>
+              </Button> */}
             </Col>
           </Row>
         </Form.Item>
         <Form.Item>
-          {/* loading={loading} w-full*/}
-          {/* <Button type="primary" htmlType="submit" name="action" value="login" className="w-full">
+          {/* <Button
+            onClick={handleClickLogin}
+            type="primary"
+            htmlType="submit"
+            className="w-full"
+            loading={loading}
+          >
             {'登 录'}
           </Button> */}
-          <Button type="primary" onClick={handleClickLogin}>
-            {'登 录'}
-          </Button>
-          <Button type="primary" onClick={handleClickRegister}>
-            {'注 册'}
+
+          <Button
+            onClick={handleClickLogin}
+            disabled={isPending}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="animate-spin" />
+                请稍等...
+              </>
+            ) : (
+              '登 录'
+            )}
           </Button>
         </Form.Item>
 
-        <Row align="middle" gutter={8}>
+        {/* <Row align="middle" gutter={8}>
           <Col span={9} flex="1">
-            <Button className="w-full !text-sm">{'手机登录'}</Button>
+            <Button
+              onClick={() => setLoginState(LoginStateEnum.MOBILE)}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
+              {'手机登录'}
+            </Button>
           </Col>
           <Col span={9} flex="1">
-            <Button className="w-full !text-sm">{'二维码登录'}</Button>
+            <Button
+              onClick={() => setLoginState(LoginStateEnum.QR_CODE)}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
+              {'二维码登录'}
+            </Button>
           </Col>
           <Col span={6} flex="1">
-            <Button className="w-full !text-sm">{'注册'}</Button>
+            <Button
+              onClick={() => setLoginState(LoginStateEnum.REGISTER)}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            >
+              {'注册'}
+            </Button>
           </Col>
-        </Row>
+        </Row> */}
 
-        <Divider className="!text-xs">{'其他登录方式'}</Divider>
+        {/* <Divider className="!text-xs">{'其他登录方式'}</Divider> */}
 
-        <div className="flex cursor-pointer justify-around text-2xl">
+        {/* <div className="flex cursor-pointer justify-around text-2xl">
           <AiFillGithub />
           <AiFillWechat />
           <AiFillGoogleCircle />
-        </div>
+        </div> */}
+        <ReturnButton
+          iconType="forward"
+          title="注册"
+          onClick={() => setLoginState(LoginStateEnum.REGISTER)}
+        />
       </Form>
     </>
   );
