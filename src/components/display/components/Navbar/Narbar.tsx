@@ -2,6 +2,7 @@ import { MdMenu } from 'react-icons/md';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 interface NavbarMenu {
   id: number;
@@ -86,9 +87,14 @@ const Narbar = ({ scrollToSection }: NarbarProps) => {
                   </a>
                 </li>
               ))}
-              <button onClick={() => redirect('/auth/login')} className=" text-3xl ps-14 cursor-pointer">
-                <FaRegCircleUser />
-              </button>
+              <Link href="/auth/login" prefetch>
+                <button
+                  
+                  className=" text-3xl ps-14 cursor-pointer"
+                >
+                  <FaRegCircleUser />
+                </button>
+              </Link>
             </ul>
           </div>
 

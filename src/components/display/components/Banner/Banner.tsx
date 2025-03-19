@@ -1,14 +1,42 @@
 import Headphone from '@/assets/headphone4.png';
 import { motion } from 'framer-motion';
 import { fadeUp } from '@/components/display/FadeUp';
+import Image from 'next/image';
 
 const Banner = () => {
+  const HeadphoneImage = () => {
+    return (
+      <div>
+        <motion.div
+          initial={{ opacity: 0, x: -100, rotate: -180 }}
+          animate={{ opacity: 1, x: 0, rotate: 0 }}
+          transition={{
+            duration: 0.8,
+            delay: 0.2,
+            ease: 'easeInOut',
+          }}
+          className="will-change-transform"
+        >
+          <Image
+            src={Headphone}
+            alt="Headphone"
+            width={400}
+            height={400}
+            className="w-[300px] md:w-[400px] mx-auto"
+            priority
+          />
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <>
       <section>
         <div className="container py-14 grid grid-cols-1 md:grid-cols-2 space-y-6 md:space-y-0 gap-12 px-28">
           {/* Image */}
-          <div>
+          <HeadphoneImage />
+          {/* <div>
             <motion.img
               src={Headphone.src}
               alt=""
@@ -21,7 +49,7 @@ const Banner = () => {
                 ease: 'easeInOut',
               }}
             />
-          </div>
+          </div> */}
           {/* Text */}
           <div className="flex flex-col justify-center">
             <div className="text-center md:text-left space-y-4 lg:max-w-[450px]">

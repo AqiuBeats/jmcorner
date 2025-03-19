@@ -8,7 +8,16 @@ import BannerText from '@/components/display/components/Banner/BannerText';
 import Blogs from '@/components/display/components/Blogs/Blogs';
 import Footer from '@/components/display/components/Footer/Footer';
 
+import { useSession } from 'next-auth/react';
+
 const Home = () => {
+
+  const { data: session, status } = useSession();
+  console.log('session', session,status);
+  // const secretKey = process.env.AES_SECRET_KEY || '';
+  // console.log('AES_SECRET_KEY', secretKey);
+  // console.log('JWT_SECRET', process.env.NEXT_PUBLIC_JWT_SECRET);
+
   const homeRef = useRef<HTMLDivElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
   const blogRef = useRef<HTMLDivElement>(null);

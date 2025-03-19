@@ -126,6 +126,7 @@ const Hero = () => {
                 {headphoneData.map((headphone) => {
                   return (
                     <div
+                      key={headphone.id}
                       onClick={() => handleActiveHeadphone(headphone)}
                       className="grid grid-cols-2 place-items-center cursor-pointer"
                     >
