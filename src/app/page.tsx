@@ -489,9 +489,11 @@ export default function HomePage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Button size="sm" className="bg-rose-500 hover:bg-rose-600">
-                免费注册
-              </Button>
+              <Link href="/auth/login" prefetch>
+                <Button size="sm" className="bg-rose-500 hover:bg-rose-600">
+                  免费注册
+                </Button>
+              </Link>
             </motion.div>
 
             {/* Mobile Menu Button */}
