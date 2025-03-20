@@ -15,6 +15,7 @@ import {
   useLoginStateContext,
 } from '@/components/login/components/LoginStateProvider';
 import { User } from '@prisma/client';
+import { errorToString } from '@/utils/errorUtils';
 
 function RegisterForm() {
   // const { t } = useTranslation();
@@ -34,32 +35,20 @@ function RegisterForm() {
 
   const { loginState, backToLogin } = useLoginStateContext();
 
-  // 将 useEffect 移到条件语句之前
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('注册成功');
-    //   console.log('注册成功', data);
-      setTimeout(() => {
-        backToLogin();
-      }, 1000);
-    }
-    if (isError) {
-      toast.error('注册失败' + error);
-    }
-  }, [isSuccess, isError]);
+  const handleClickRegister = (values: any) => {
+    const pwd = values.password;
+    values.password = encodeAESData(pwd);
+    createUser(values, {
+      onSuccess: () => {
+        toast.success('注册成功!');
+      },
+      onError: (error) => {
+        toast.error('注册失败:' + errorToString(error));
+      },
+    });
+  };
 
   if (loginState !== LoginStateEnum.REGISTER) return null;
-
-  const handleClickRegister = async () => {
-    try {
-      const values = form.getFieldsValue();
-      const pwd = values.password;
-      values.password = encodeAESData(pwd);
-      createUser(values); // 调用 createUser
-    } catch (err) {
-      console.error('Failed to create user:', err);
-    }
-  };
 
   return (
     <>
@@ -69,10 +58,17 @@ function RegisterForm() {
         name="phone"
         size="large"
         initialValues={{ remember: true }}
+        onFinish={handleClickRegister}
       >
         <Form.Item
           name="phone"
-          rules={[{ required: true, message: '请输入手机号' }]}
+          rules={[
+            { required: true, message: '请输入手机号' },
+            {
+              pattern: /^1[3-9]\d{9}$/,
+              message: '请输入有效的手机号',
+            },
+          ]}
         >
           <Input placeholder={'手机号'} />
         </Form.Item>
@@ -84,16 +80,19 @@ function RegisterForm() {
         </Form.Item> */}
         <Form.Item
           name="password"
-          rules={[{ required: true, message: '请输入密码' }]}
+          rules={[
+            { required: true, message: '请输入密码' },
+            { min: 8, message: '密码必须至少 8 位' },
+          ]}
         >
-          <Input.Password type="password" placeholder={'密码'} />
+          <Input.Password placeholder={'密码'} />
         </Form.Item>
         <Form.Item
           name="confirmPassword"
           rules={[
             {
               required: true,
-              message: '请确认密码',
+              message: '请输入密码',
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
@@ -112,7 +111,7 @@ function RegisterForm() {
             {'注册'}
           </Button> */}
           <Button
-            onClick={handleClickRegister}
+            type="submit"
             disabled={isPending}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           >

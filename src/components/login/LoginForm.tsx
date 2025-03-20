@@ -16,6 +16,7 @@ import {
 } from '@/components/login/components/LoginStateProvider';
 import { ReturnButton } from './components/ReturnButton';
 import { useLoginMutation } from '@/helpers/request';
+import { errorToString } from '@/utils/errorUtils';
 
 function LoginForm() {
   const { loginState, setLoginState } = useLoginStateContext();
@@ -29,30 +30,17 @@ function LoginForm() {
     error,
   } = useLoginMutation();
 
-  type Error = {
-    message: string;
-    status: string;
-    data: any;
-  };
-
-  // 将 useEffect 移到条件语句之前
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('登录成功!');
-    }
-    if (isError) {
-      toast.error('登录失败:' + error + data);
-    }
-  }, [isSuccess, isError]);
-
-  if (loginState !== LoginStateEnum.LOGIN) return null;
-
-  const [form] = Form.useForm();
-  const handleClickLogin = async () => {
-    const values = form.getFieldsValue();
+  const handleClickLogin = async (values: any) => {
     const pwd = values.password;
     values.password = encodeAESData(pwd);
-    login(values);
+    login(values, {
+      onSuccess: () => {
+        toast.success('登录成功!');
+      },
+      onError: (error) => {
+        toast.error('登录失败:' + errorToString(error));
+      },
+    });
     // const result = await signIn('credentials', {
     //   redirect: false,
     //   ...values,
@@ -70,20 +58,18 @@ function LoginForm() {
     // }
   };
 
+  if (loginState !== LoginStateEnum.LOGIN) return null;
+
   return (
     <>
       <div className="mb-4 text-2xl font-bold xl:text-3xl">{'登录'}</div>
       <Form
-        form={form}
         name="login"
         size="large"
         initialValues={{
           remember: true,
-          // phone: '13147173415',
-          // password: DEFAULT_USER.password,
-          // action: 'login',
         }}
-        // onFinish={handleFinish}
+        onFinish={handleClickLogin}
       >
         <Form.Item
           name="phone"
@@ -101,7 +87,7 @@ function LoginForm() {
           name="password"
           rules={[
             { required: true, message: '请输入密码' },
-            { min: 6, message: '密码必须至少 6 位' },
+            { min: 8, message: '密码必须至少 8 位' },
           ]}
         >
           <Input.Password placeholder={'密码'} />
@@ -132,7 +118,8 @@ function LoginForm() {
           </Button> */}
 
           <Button
-            onClick={handleClickLogin}
+            type="submit"
+            // onClick={handleClickLogin}
             disabled={isPending}
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           >

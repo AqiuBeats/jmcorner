@@ -72,7 +72,6 @@ const update = async ({ id, params }: { id: string; params: any }) => {
     if (!user) throw '用户不存在';
   } catch (error) {
     throw '更新用户信息失败:' + error;
-  } finally {
   }
 };
 
@@ -109,7 +108,8 @@ const authenticate = async (params: User) => {
     where: { phone: phone },
   });
   if (!user) {
-    throw `${phone} 用户不存在`;
+    // throw `${phone} 用户不存在`;//默认400
+    throw new Error(`${phone} 用户不存在`); //默认500
   }
   //密码校验
   const decode_pwd = decodeAESData(password);
@@ -175,9 +175,9 @@ const resetPassword = async ({
         password: hashedPassword, // 更新为哈希后的密码
       },
     });
-    if (updatedUser) {
-      throw '重置密码成功';
-    }
+    // if (updatedUser) {
+    //   throw '重置密码成功';
+    // }
   } catch (error) {
     throw new Error('重置密码失败:' + error);
   }

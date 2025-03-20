@@ -16,10 +16,10 @@ const register = apiHandler(
         .string()
         .pattern(/^1[3-9]\d{9}$/) // 校验手机号
         .required(),
-      // password: joi
-      //   .string()
-      //   .min(6) // 密码至少 6 位数
-      //   .required(),
+      password: joi
+        .string()
+        .min(8) // 密码至少 8 位数
+        .required(),
     }),
   },
 );
