@@ -17,8 +17,10 @@ import {
 import { ReturnButton } from './components/ReturnButton';
 import { useLoginMutation } from '@/helpers/request';
 import { errorToString } from '@/utils/errorUtils';
+import { useRouter } from 'next/navigation'; // 引入 useRouter
 
 function LoginForm() {
+  const router = useRouter(); // 使用 useRouter
   const { loginState, setLoginState } = useLoginStateContext();
 
   const {
@@ -36,6 +38,8 @@ function LoginForm() {
     login(values, {
       onSuccess: () => {
         toast.success('登录成功!');
+        // redirect('/square');
+        router.push('/square'); // 使用 router.push 替代 redirect
       },
       onError: (error) => {
         toast.error('登录失败:' + errorToString(error));
