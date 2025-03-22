@@ -46,6 +46,13 @@ model User {
   accounts Account[]
   sessions Session[]
 
+  posts          Post[] // 用户发布的日志
+  Comment        Comment[] // 用户日志评论
+  Like           Like[] // 用户日志点赞
+  Thought        Thought[] // 用户想法
+  ThoughtComment ThoughtComment[] // 用户想法评论
+  ThoughtLike    ThoughtLike[] // 用户想法点赞
+
   // 用户资产账户关系（1:1）
   flowerAccount   FlowerAccount? @relation("UserFlowerAccount", fields: [flowerAccountId], references: [id])
   flowerAccountId String?        @unique
@@ -117,6 +124,93 @@ model Membership {
   userId     String?  @unique // 关联用户
 
   MembershipBenefit MembershipBenefit[]
+}
+
+//日志模型
+model Post {
+  id        String   @id @default(uuid())
+  userId    String
+  content   String // 存储 HTML 格式的图文内容
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isPublic  Boolean  @default(true)
+
+  user     User      @relation(fields: [userId], references: [id])
+  comments Comment[]
+  likes    Like[]
+}
+
+//日志评论模型
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String // 关联的日志 ID
+  userId    String // 评论者 ID
+  content   String // 评论内容
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+//日志点赞模型
+model Like {
+  id        String   @id @default(uuid())
+  postId    String // 关联的日志 ID
+  userId    String // 点赞者 ID
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([postId, userId]) // 防止重复点赞
+}
+
+//想法模型
+model Thought {
+  id        String   @id @default(uuid()) // 唯一标识符
+  userId    String // 发布者的用户ID
+  content   String // 纯文本内容
+  images    String[] // 图片URL数组，最多9张
+  createdAt DateTime @default(now()) // 创建时间
+  updatedAt DateTime @updatedAt // 更新时间
+  isPublic  Boolean  @default(true) // 是否公开可见
+
+  // 关联到 User 模型
+  user User @relation(fields: [userId], references: [id])
+
+  //评论和点赞
+  comments ThoughtComment[]
+  likes    ThoughtLike[]
+}
+
+//想法评论模型
+model ThoughtComment {
+  id        String   @id @default(uuid()) // 唯一标识符
+  thoughtId String // 关联的 Thought ID
+  userId    String // 评论者的用户ID
+  content   String // 评论内容
+  createdAt DateTime @default(now()) // 创建时间
+  updatedAt DateTime @updatedAt // 更新时间
+
+  // 关联关系
+  thought Thought @relation(fields: [thoughtId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+//想法点赞模型
+model ThoughtLike {
+  id        String   @id @default(uuid()) // 唯一标识符
+  thoughtId String // 关联的 Thought ID
+  userId    String // 点赞者的用户ID
+  createdAt DateTime @default(now()) // 创建时间
+
+  // 关联关系
+  thought Thought @relation(fields: [thoughtId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  // 防止重复点赞
+  @@unique([thoughtId, userId])
 }
 
 // 消息系统模型
@@ -273,6 +367,7 @@ enum ActionType {
   SIGN_IN // 每日签到
   VIEW_PROFILE // 查看他人资料
   UPDATE_INFO // 修改个人信息
+  POST_LOG // 发布日志
 }
 
 // 枚举类型定义

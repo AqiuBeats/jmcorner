@@ -19,7 +19,8 @@ import QrCodeFrom from '@/components/login/QrCodeForm';
 import RegisterForm from '@/components/login/RegisterForm';
 import ResetForm from '@/components/login/ResetForm';
 
-import { LoginStateProvider } from "@/components/login/components/LoginStateProvider";
+import { LoginStateProvider } from '@/components/login/components/LoginStateProvider';
+import { AuroraBackground } from '@/components/ui/aurora-background';
 
 // const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
@@ -37,8 +38,10 @@ function Login() {
   // const bg = `linear-gradient(135deg, rgba(var(--colors-palette-primary-lightChannel), .2), rgba(var(--colors-palette-primary-defaultChannel), .2)) var(--colors-common-white)`;
 
   return (
-    <div className="relative flex !min-h-screen !w-full !flex-row bg-[#ffe8e4]">
-      {/* <div
+    // bg-[#ffe8e4]
+    <AuroraBackground>
+      <div className="relative flex !min-h-screen !w-full !flex-row ">
+        {/* <div
 				className="hidden grow flex-col items-center justify-center gap-[80px] bg-center  bg-no-repeat md:flex"
 				style={{
 					background: bg,
@@ -51,24 +54,26 @@ function Login() {
 				</Typography.Text>
 			</div> */}
 
-      <div
-        className="m-auto flex !h-screen w-full max-w-[480px] flex-col justify-center px-[16px] lg:px-[64px]
-	    bg-gradient-to-t from-[#ffe8e4] to-[#ffe8e4]/70"
-      >
-        <LoginStateProvider>
-          <LoginForm />
-          {/* <MobileForm /> */}
-          {/* <QrCodeFrom /> */}
-          <RegisterForm />
-          {/* <ResetForm /> */}
-        </LoginStateProvider>
-      </div>
+        {/* bg-gradient-to-t from-[#ffe8e4] to-[#ffe8e4]/70 */}
+        <div
+          className="m-auto flex !h-screen w-full max-w-[480px] flex-col justify-center px-[16px] lg:px-[64px]
+	    "
+        >
+          <LoginStateProvider>
+            <LoginForm />
+            {/* <MobileForm /> */}
+            {/* <QrCodeFrom /> */}
+            <RegisterForm />
+            {/* <ResetForm /> */}
+          </LoginStateProvider>
+        </div>
 
-      <div className="absolute right-2 top-0 flex flex-row">
-        {/* <LocalePicker /> */}
-        {/* <SettingButton /> */}
+        <div className="absolute right-2 top-0 flex flex-row">
+          {/* <LocalePicker /> */}
+          {/* <SettingButton /> */}
+        </div>
       </div>
-    </div>
+    </AuroraBackground>
   );
 }
 export default Login;
