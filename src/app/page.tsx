@@ -797,6 +797,7 @@ export default function HomePage() {
               >
                 <motion.div
                   className="aspect-[4/3] overflow-hidden rounded-xl"
+                  whileHover={{ scale: 1.03 }}
                   style={{
                     y: heroImageY,
                     scale: heroScale,
