@@ -33,8 +33,7 @@ import { useMediaQuery } from '@/hooks/use-media-query';
 
 export default function HomePage() {
   // Section refs for scrolling
-  //   const heroRef = useRef(null);
-  const heroRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef(null);
   const featuresRef = useRef(null);
   const worldRef = useRef(null);
   const matchingRef = useRef(null);
@@ -63,7 +62,7 @@ export default function HomePage() {
   const carouselItems = [
     {
       image: '/placeholder.svg?height=800&width=1600&text=浪漫约会',
-      title: '找到你的真爱',
+      title: '找到你的真爱1',
       description: '在江城缘，每一次相遇都可能是一生的缘分',
     },
     {
@@ -79,7 +78,7 @@ export default function HomePage() {
     {
       image: '/placeholder.svg?height=800&width=1600&text=我的世界',
       title: '展示真实的你',
-      description: '通过日志和博客，让别人了解真实的你',
+      description: '通过想法和日志，让别人了解真实的你',
     },
   ];
 
@@ -155,12 +154,12 @@ export default function HomePage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when resizing to desktop
+  // Close mobile menu when resizing to desktop or tablet (if applicable)
   useEffect(() => {
-    if (!isMobile && mobileMenuOpen) {
+    if (!isMobile && !isTablet && mobileMenuOpen) {
       setMobileMenuOpen(false);
     }
-  }, [isMobile, mobileMenuOpen]);
+  }, [isMobile, isTablet, mobileMenuOpen]);
 
   // Scroll to section function
   //   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
@@ -173,6 +172,7 @@ export default function HomePage() {
   const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false); // Close menu after navigation
     } else {
       console.warn('Reference to section is not available.');
     }
@@ -235,15 +235,16 @@ export default function HomePage() {
     }),
   };
 
-  // Mobile menu variants
+  // Updated menu animation variants for mobile and tablet
   const menuVariants = {
     closed: {
       opacity: 0,
-      x: '100%',
+      x: isTablet ? '50%' : '100%', // Slide less for tablets
       transition: {
         type: 'spring',
-        stiffness: 400,
-        damping: 40,
+        stiffness: isMobile ? 400 : 300, // Softer stiffness for mobile
+        damping: isMobile ? 40 : 30, // Smoother damping for mobile
+        duration: 0.2,
       },
     },
     open: {
@@ -251,8 +252,9 @@ export default function HomePage() {
       x: '0%',
       transition: {
         type: 'spring',
-        stiffness: 400,
-        damping: 40,
+        stiffness: isMobile ? 400 : 300,
+        damping: isMobile ? 40 : 30,
+        duration: isTablet ? 0.3 : 0.4, // Slightly faster for tablets
       },
     },
   };
@@ -397,50 +399,52 @@ export default function HomePage() {
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        <div className="container flex h-16 items-center justify-between">
-          <motion.div
-            className="flex items-center"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            whileHover="hover"
-            onClick={() => scrollToSection(heroRef)}
-            style={{ cursor: 'pointer' }}
-          >
+        <div className="container flex h-16 items-center mx-auto">
+          <div className="flex-1 flex justify-start">
             <motion.div
-              className="text-2xl font-bold relative"
-              initial="hidden"
-              animate="visible"
-              variants={logoTextVariants}
+              className="flex items-center"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              whileHover="hover"
+              onClick={() => scrollToSection(heroRef)}
+              style={{ cursor: 'pointer' }}
             >
-              {['江', '城', '缘'].map((letter, i) => (
-                <motion.span
-                  key={i}
-                  className="inline-block relative"
-                  variants={logoLetterVariants}
-                  custom={i}
-                  whileHover={logoHoverVariants.hover}
-                  style={{
-                    textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                    fontFamily: 'serif',
-                    fontWeight: 700,
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  {letter}
+              <motion.div
+                className="text-2xl font-bold relative"
+                initial="hidden"
+                animate="visible"
+                variants={logoTextVariants}
+              >
+                {['江', '城', '缘'].map((letter, i) => (
                   <motion.span
-                    className="absolute bottom-0 left-0 w-full h-[2px] bg-rose-500"
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.span>
-              ))}
+                    key={i}
+                    className="inline-block relative"
+                    variants={logoLetterVariants}
+                    custom={i}
+                    whileHover={logoHoverVariants.hover}
+                    style={{
+                      textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                      fontFamily: 'serif',
+                      fontWeight: 700,
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    {letter}
+                    <motion.span
+                      className="absolute bottom-0 left-0 w-full h-[2px] bg-rose-500"
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.span>
+                ))}
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-6">
+          {/* Desktop Navigation - Show on tablet and desktop */}
+          <nav className="flex-1 hidden md:flex justify-center gap-6">
             {navItems.map((item, i) => (
               <motion.div
                 key={item.name}
@@ -463,7 +467,8 @@ export default function HomePage() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-4">
+          {/* Right Section - Menu Button and Login/Register */}
+          <div className="flex-1 flex justify-end items-center gap-4">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -495,14 +500,14 @@ export default function HomePage() {
                 </Button>
               </Link>
             </motion.div>
-
-            {/* Mobile Menu Button */}
+            {/* Menu Toggle Button - Visible on mobile and tablet */}
             <motion.button
               className="md:hidden flex items-center justify-center"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               whileTap={{ scale: 0.9 }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -512,8 +517,7 @@ export default function HomePage() {
             </motion.button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
+        {/* Mobile/Tablet Menu */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
@@ -523,17 +527,21 @@ export default function HomePage() {
               exit="closed"
               variants={menuVariants}
             >
-              <div className="container px-4 py-6 flex flex-col gap-6">
+              <div
+                className={`container px-4 py-6 flex flex-col gap-6 ${
+                  isTablet ? 'max-w-md ml-auto' : 'w-full'
+                }`}
+              >
                 {navItems.map((item, i) => (
                   <motion.div
                     key={item.name}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
+                    transition={{ delay: i * 0.1, duration: 0.3 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <button
-                      className="text-xl font-medium block py-2 border-b border-muted w-full text-left hover:text-rose-500 active:text-rose-500 focus:text-rose-500"
+                      className="text-xl font-medium block py-2 border-b border-muted w-full text-left hover:text-rose-500 active:text-rose-600 focus:text-rose-500 transition-colors duration-200"
                       onClick={() => scrollToSection(item.ref)}
                     >
                       {item.name}
@@ -543,12 +551,13 @@ export default function HomePage() {
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
+                  transition={{ delay: 0.5, duration: 0.3 }}
+                  whileTap={{ scale: 0.95 }}
                   className="mt-4"
                 >
                   <Link
                     href="#"
-                    className="text-xl font-medium block py-2 hover:text-rose-500"
+                    className="text-xl font-medium block py-2 hover:text-rose-500 active:text-rose-600 transition-colors duration-200"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     登录
@@ -562,8 +571,8 @@ export default function HomePage() {
 
       <main className="flex-1">
         {/* Glassmorphism Carousel */}
-        <section className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden">
-          <div className="absolute inset-0 z-10">
+        {/* <section className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden">
+          <div className="absolute inset-0 z-10 flex items-center justify-center">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={page}
@@ -576,7 +585,7 @@ export default function HomePage() {
                   x: { type: 'spring', stiffness: 300, damping: 30 },
                   opacity: { duration: 0.5 },
                 }}
-                className="absolute inset-0"
+                className="w-full max-w-5xl"
               >
                 <div className="relative w-full h-full">
                   <Image
@@ -589,11 +598,9 @@ export default function HomePage() {
                     priority
                   />
                   <div className="absolute inset-0 bg-black/30" />
-
-                  {/* Glassmorphism overlay */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <motion.div
-                      className="bg-white/10 backdrop-blur-md p-8 md:p-12 rounded-xl border border-white/20 shadow-2xl max-w-3xl mx-4"
+                      className="bg-white/10 backdrop-blur-md p-8 md:p-12 rounded-xl border border-white/20 shadow-2xl max-w-3xl mx-auto"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3, duration: 0.5 }}
@@ -633,8 +640,6 @@ export default function HomePage() {
               </motion.div>
             </AnimatePresence>
           </div>
-
-          {/* Carousel navigation */}
           <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
             {carouselItems.map((_, i) => (
               <button
@@ -651,8 +656,6 @@ export default function HomePage() {
               />
             ))}
           </div>
-
-          {/* Carousel arrows */}
           <button
             className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 backdrop-blur-sm p-2 rounded-full text-white hover:bg-white/20 transition-all duration-300"
             onClick={() => paginate(-1)}
@@ -667,7 +670,7 @@ export default function HomePage() {
           >
             <ChevronRight className="h-6 w-6" />
           </button>
-        </section>
+        </section> */}
 
         <section
           className="w-full py-8 md:py-16 lg:py-24 bg-gradient-to-b from-rose-50 to-background relative overflow-hidden"
@@ -701,7 +704,7 @@ export default function HomePage() {
             ))}
           </AnimatePresence>
 
-          <div className="container px-4 md:px-6">
+          <div className="container px-4 md:px-6 mx-auto">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
               <motion.div
                 className="space-y-4 text-center lg:text-left"
@@ -800,12 +803,11 @@ export default function HomePage() {
                   }}
                 >
                   <Image
-                    src="/placeholder.svg?height=600&width=800"
+                    src="/homepage/yuan.jpg"
                     alt="幸福的情侣"
                     width={800}
-                    height={600}
+                    height={800}
                     className="object-cover w-full h-full"
-                    priority
                   />
                 </motion.div>
                 <motion.div
@@ -861,7 +863,7 @@ export default function HomePage() {
         </section>
 
         <section className="w-full py-8 md:py-16 lg:py-24" ref={featuresRef}>
-          <div className="container px-4 md:px-6">
+          <div className="container px-4 md:px-6 mx-auto">
             <motion.div
               className="flex flex-col items-center justify-center space-y-4 text-center"
               initial="hidden"
@@ -908,7 +910,7 @@ export default function HomePage() {
                 {
                   icon: <Globe className="h-6 w-6 text-rose-500" />,
                   title: '我的世界',
-                  desc: '个人空间让你展示真实的自己，通过日志和博客分享生活。',
+                  desc: '个人空间让你展示真实的自己，通过想法和日志分享生活。',
                 },
               ].map((feature, i) => (
                 <motion.div
@@ -945,7 +947,7 @@ export default function HomePage() {
           className="w-full py-8 md:py-16 lg:py-24 bg-gradient-to-r from-rose-50 to-background"
           ref={worldRef}
         >
-          <div className="container px-4 md:px-6">
+          <div className="container px-4 md:px-6 mx-auto">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
               <motion.div
                 className="mx-auto w-full max-w-[500px] order-2 lg:order-1"
@@ -961,7 +963,7 @@ export default function HomePage() {
                   transition={{ type: 'spring', stiffness: 300, damping: 15 }}
                 >
                   <Image
-                    src="/placeholder.svg?height=800&width=800&text=我的世界"
+                    src="/homepage/study.jpg"
                     alt="我的世界功能展示"
                     width={800}
                     height={800}
@@ -1002,11 +1004,11 @@ export default function HomePage() {
                 >
                   {[
                     {
-                      title: '个人日志',
+                      title: '个人想法',
                       desc: '记录每一天的心情与感悟，让潜在伴侣了解真实的你。日志可以设置公开或私密，完全由你掌控。',
                     },
                     {
-                      title: '兴趣博客',
+                      title: '兴趣日志',
                       desc: '分享你的兴趣爱好，无论是美食、旅行、电影还是阅读，展示你的生活态度和价值观。',
                     },
                     {
@@ -1050,7 +1052,7 @@ export default function HomePage() {
 
         {/* DeepSeek Matching Section */}
         <section className="w-full py-8 md:py-16 lg:py-24" ref={matchingRef}>
-          <div className="container px-4 md:px-6">
+          <div className="container px-4 md:px-6 mx-auto">
             <motion.div
               className="flex flex-col items-center justify-center space-y-4 text-center mb-12"
               initial="hidden"
@@ -1293,7 +1295,7 @@ export default function HomePage() {
           className="w-full py-8 md:py-16 lg:py-24 bg-rose-50"
           ref={storiesRef}
         >
-          <div className="container px-4 md:px-6">
+          <div className="container px-4 md:px-6 mx-auto">
             <motion.div
               className="flex flex-col items-center justify-center space-y-4 text-center"
               initial="hidden"
@@ -1336,7 +1338,7 @@ export default function HomePage() {
                           whileHover={{ scale: 1.1 }}
                         >
                           <Image
-                            src={`/placeholder.svg?height=100&width=100&text=用户${i}`}
+                            src={`/homepage/avtar0${i}.jpg`}
                             alt={`用户${i}`}
                             width={100}
                             height={100}
@@ -1389,7 +1391,7 @@ export default function HomePage() {
         </section>
 
         <section className="w-full py-8 md:py-16 lg:py-24" ref={stepsRef}>
-          <div className="container px-4 md:px-6">
+          <div className="container px-4 md:px-6 mx-auto">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
               <motion.div
                 className="space-y-4 order-2 lg:order-1"
@@ -1421,7 +1423,7 @@ export default function HomePage() {
                     },
                     {
                       title: '创建我的世界',
-                      desc: '通过日志和博客展示真实的自己，吸引志同道合的人',
+                      desc: '通过想法和日志展示真实的自己，吸引志同道合的人',
                     },
                     {
                       title: '智能匹配',
@@ -1470,7 +1472,7 @@ export default function HomePage() {
                   transition={{ type: 'spring', stiffness: 300, damping: 15 }}
                 >
                   <Image
-                    src="/placeholder.svg?height=800&width=800"
+                    src="/homepage/organize.jpg"
                     alt="约会场景"
                     width={800}
                     height={800}
@@ -1486,7 +1488,7 @@ export default function HomePage() {
           className="w-full py-8 md:py-16 lg:py-24 bg-rose-500 text-white"
           ref={ctaRef}
         >
-          <div className="container px-4 md:px-6">
+          <div className="container px-4 md:px-6 mx-auto">
             <motion.div
               className="flex flex-col items-center justify-center space-y-4 text-center"
               initial="hidden"
