@@ -1,5 +1,4 @@
 import type React from 'react';
-import '@/app/globals.css';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import Link from 'next/link';
@@ -36,7 +35,7 @@ export default function RootLayout({
         >
           <ParallaxBackground>
             <div className="flex min-h-screen flex-col">
-            {/* bg-mint-mambo/80 */}
+              {/* bg-mint-mambo/80 */}
               <header className="sticky top-0 z-50 w-full border-b glassmorphism bg-mint-mambo/80">
                 <div className="container flex h-14 items-center">
                   <Link

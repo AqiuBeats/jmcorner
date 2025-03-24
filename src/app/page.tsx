@@ -390,7 +390,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-lama-sky">
       <motion.header
         className={`sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 ${
           scrolled ? 'bg-background/95' : 'bg-transparent'

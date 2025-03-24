@@ -1,7 +1,10 @@
-@tailwind;
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* @import '../../tailwind.config.ts'; */
+/* v4版本 代替上面三行 */
 @import 'tailwindcss';
-@plugin "tailwindcss-animate";
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
@@ -42,6 +45,14 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /* 新增 */
+  --color-mint-mambo: var(--mint-mambo);
+  --color-light-lilac: var(--light-lilac);
+  --color-soft-peach: var(--soft-peach);
+  --color-calm-blue: var(--calm-blue);
+  --color-light-yellow: var(--light-yellow);
+  --color-menu-gray: var(--menu-gray);
+  --color-gold: var(--gold);
 }
 
 :root {
@@ -78,6 +89,35 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 210 60% 48%; /* 静谧蓝 #4682B4 */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 160 100% 75%; /* 薄荷曼波色 #7FFFD4 */
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  /* --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%; */
+  --accent: 240 67% 94%; /* 淡丁香色 #E6E6FA */
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  /* --border: 214.3 31.8% 91.4%; */
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
+
+  --mint-mambo: #7cebc6; /* 薄荷曼波色 */
+  --light-lilac: #e6d7f8;
+  --soft-peach: #ffcbc4;
+  --calm-blue: #5e9ed6;
+  --light-yellow: #fff3b0;
+  --menu-gray: #a0a0a0;
+  --gold: #ffd700;
 }
 
 .dark {
@@ -113,6 +153,26 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 60% 48%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 160 100% 75%;
+  --secondary-foreground: 210 40% 98%;
+  /* --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%; */
+  --accent: 240 67% 94%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  /* --border: 217.2 32.6% 17.5%; */
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
 }
 
 @layer base {
@@ -122,4 +182,197 @@
   body {
     @apply bg-background text-foreground;
   }
+  /* h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  } */
+}
+
+/* 自定义颜色类 */
+@layer utilities {
+  /* .bg-mint-mambo {
+    background-color: #7fffd4;
+  } */
+
+  /* 自定义动画 */
+
+  .animate-accordion-down {
+    animation: accordion-down 0.2s ease-out;
+  }
+
+  .animate-accordion-up {
+    animation: accordion-up 0.2s ease-out;
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-gold {
+    animation: pulse-gold 2s infinite;
+  }
+}
+
+/* 自定义动画 */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: 'translateY(0)';
+  }
+  50% {
+    transform: 'translateY(-10px)';
+  }
+}
+
+@keyframes pulse-gold {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(255, 215, 0, 0.3);
+    transform: scale(1.05);
+  }
+}
+
+/* 自定义组件类 */
+@layer components {
+  .glassmorphism {
+    @apply bg-white/25          /* 背景白色 25% 透明 */
+      backdrop-blur-lg     /* 背景模糊 */
+      border border-white/20 /* 白色边框 20% 透明 */
+      shadow-lg; /* 大投影 */
+  }
+
+  .avatar-glassmorphism {
+    @apply relative overflow-hidden;
+  }
+
+  .icon-outline {
+    @apply stroke-[1.5] fill-none;
+  }
+}
+
+/* 玻璃拟态效果 */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.avatar-glassmorphism {
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-glassmorphism::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1)
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.avatar-glassmorphism img {
+  position: relative;
+  z-index: 0;
+}
+
+/* 粒子动画 */
+@keyframes particle-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.particle {
+  position: absolute;
+  background: radial-gradient(
+    circle,
+    rgba(255, 215, 0, 0.8) 0%,
+    rgba(255, 215, 0, 0) 70%
+  );
+  border-radius: 50%;
+  animation: particle-appear 0.5s forwards;
+}
+
+/* 视差效果 */
+.parallax-container {
+  overflow-x: hidden;
+  overflow-y: auto;
+  perspective: 1px;
+  height: 100vh;
+  scroll-behavior: smooth;
+}
+
+.parallax-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateZ(-1px) scale(2);
+  z-index: -1;
+}
+
+.parallax-content {
+  position: relative;
+  transform: translateZ(0);
+  z-index: 1;
+}
+
+/* 极简线性图标样式 */
+.icon-outline {
+  stroke-width: 1.5;
+  fill: none;
+}
+
+/* 心形粒子动画容器 */
+.heart-particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
 }
