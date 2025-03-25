@@ -3,7 +3,7 @@ import { apiHandler, setJson } from '@/helpers/api';
 import joi from 'joi';
 
 const register = apiHandler(
-  async (req: { json: () => any }) => {
+  async (req: { json: () => unknown }) => {
     const body = await req.json();
     const result = await usersRepo.create(body);
     return setJson({

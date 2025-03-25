@@ -9,6 +9,7 @@ import {
 import { FaMapLocation } from "react-icons/fa6";
 import Cards from "@/assets/credit-cards.webp";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const Footer: React.FC = () => {
   return (
@@ -82,7 +83,7 @@ const Footer: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <p>Payment Methods</p>
-                <img src={Cards.src} alt="Payment Methods" className="w-[80%]" />
+                <Image src={Cards.src} alt="Payment Methods" className="w-[80%]" />
               </div>
             </motion.div>
           </div>

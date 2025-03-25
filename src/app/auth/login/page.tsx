@@ -1,30 +1,18 @@
 'use client';
-
-import { Layout, Typography } from 'antd';
-import DashboardImg from '@/assets/images/dashboard.png';
-// import { useTranslation } from "react-i18next";
-// import { Navigate } from "react-router";
-
-// import DashboardImg from "@/assets/images/background/dashboard.png";
-// import Overlay from "@/assets/images/background/overlay.jpg";
-// import LocalePicker from "@/components/locale-picker";
-// import { useUserToken } from "@/store/userStore";
-
-// import SettingButton from "@/layouts/components/setting-button";
-// import { themeVars } from "@/theme/theme.css";
-// import { rgbAlpha } from "@/utils/theme";
 import LoginForm from '@/components/login/LoginForm';
-import MobileForm from '@/components/login/MobileForm';
-import QrCodeFrom from '@/components/login/QrCodeForm';
+// import MobileForm from '@/components/login/MobileForm';
+// import QrCodeFrom from '@/components/login/QrCodeForm';
 import RegisterForm from '@/components/login/RegisterForm';
-import ResetForm from '@/components/login/ResetForm';
+// import ResetForm from '@/components/login/ResetForm';
 
 import { LoginStateProvider } from '@/components/login/components/LoginStateProvider';
 import { AuroraBackground } from '@/components/ui/aurora-background';
 
 // const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
-function Login() {
+const Login = ({ searchParams }: { searchParams: { loginState?: string } }) => {
+  const type = searchParams.loginState; //use现在是一个实验型API,不需要管
+  console.log('type', type);
   // const { t } = useTranslation();
   // const token = useUserToken();
 
@@ -60,7 +48,7 @@ function Login() {
 	    "
         >
           <LoginStateProvider>
-            <LoginForm />
+            <LoginForm loginState={type} />
             {/* <MobileForm /> */}
             {/* <QrCodeFrom /> */}
             <RegisterForm />
@@ -75,5 +63,5 @@ function Login() {
       </div>
     </AuroraBackground>
   );
-}
+};
 export default Login;

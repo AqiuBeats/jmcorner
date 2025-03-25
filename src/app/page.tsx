@@ -20,7 +20,7 @@ import {
   BadgeCheck,
   Zap,
   Globe,
-  ChevronLeft,
+  // ChevronLeft,
 } from 'lucide-react';
 import {
   motion,
@@ -31,7 +31,24 @@ import {
 } from 'framer-motion';
 import { useMediaQuery } from '@/hooks/use-media-query';
 
+import useAuthStore from '@/hooks/useAuthStore'; // 导入 Zustand store
+
 export default function HomePage() {
+  //判断token是否失效
+  const { token, isTokenExpired, getTokenExpiration, clearToken } =
+    useAuthStore();
+  if (isTokenExpired()) {
+    console.log('isTokenExpired', 'token已经过期'); //会短暂的进入过期状态,然后更正
+  } else {
+    console.log('token', token);
+    console.log('token过期时间', getTokenExpiration());
+  }
+
+  const handleOut = () => {
+    console.log('handleOut');
+    clearToken();
+  };
+
   // Section refs for scrolling
   const heroRef = useRef(null);
   const featuresRef = useRef(null);
@@ -58,37 +75,38 @@ export default function HomePage() {
   const isTablet = useMediaQuery('(min-width: 769px) and (max-width: 1024px)');
 
   // Carousel state
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const carouselItems = [
-    {
-      image: '/placeholder.svg?height=800&width=1600&text=浪漫约会',
-      title: '找到你的真爱1',
-      description: '在江城缘，每一次相遇都可能是一生的缘分',
-    },
-    {
-      image: '/placeholder.svg?height=800&width=1600&text=智能匹配',
-      title: 'AI智能匹配',
-      description: 'DeepSeek技术为你找到最合适的伴侣',
-    },
-    {
-      image: '/placeholder.svg?height=800&width=1600&text=0元相亲',
-      title: '0元门槛参与',
-      description: '实名认证即送会员，开启你的寻爱之旅',
-    },
-    {
-      image: '/placeholder.svg?height=800&width=1600&text=我的世界',
-      title: '展示真实的你',
-      description: '通过想法和日志，让别人了解真实的你',
-    },
-  ];
+  // const [ setCurrentSlide] = useState(0);//currentSlide
+
+  // const carouselItems = [
+  //   {
+  //     image: '/placeholder.svg?height=800&width=1600&text=浪漫约会',
+  //     title: '找到你的真爱',
+  //     description: '在江城缘，每一次相遇都可能是一生的缘分',
+  //   },
+  //   {
+  //     image: '/placeholder.svg?height=800&width=1600&text=智能匹配',
+  //     title: 'AI智能匹配',
+  //     description: 'DeepSeek技术为你找到最合适的伴侣',
+  //   },
+  //   {
+  //     image: '/placeholder.svg?height=800&width=1600&text=0元相亲',
+  //     title: '0元门槛参与',
+  //     description: '实名认证即送会员，开启你的寻爱之旅',
+  //   },
+  //   {
+  //     image: '/placeholder.svg?height=800&width=1600&text=我的世界',
+  //     title: '展示真实的你',
+  //     description: '通过想法和日志，让别人了解真实的你',
+  //   },
+  // ];
 
   // Auto-advance carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [carouselItems.length]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentSlide((prev) => (prev + 1) % carouselItems.length);
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, [carouselItems.length]);
 
   // Parallax effect for hero image (reduced on mobile)
   const { scrollYProgress } = useScroll({
@@ -304,20 +322,20 @@ export default function HomePage() {
   };
 
   // Carousel variants
-  const carouselVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-  };
+  // const carouselVariants = {
+  //   enter: (direction: number) => ({
+  //     x: direction > 0 ? '100%' : '-100%',
+  //     opacity: 0,
+  //   }),
+  //   center: {
+  //     x: 0,
+  //     opacity: 1,
+  //   },
+  //   exit: (direction: number) => ({
+  //     x: direction < 0 ? '100%' : '-100%',
+  //     opacity: 0,
+  //   }),
+  // };
 
   // MBTI types for the matching section
   const mbtiTypes = [
@@ -372,22 +390,22 @@ export default function HomePage() {
   ];
 
   // Direction for carousel animation
-  const [[page, direction], setPage] = useState([0, 0]);
+  // const [[page, direction], setPage] = useState([0, 0]);
 
   // Handle carousel navigation
-  const paginate = (newDirection: number) => {
-    const newPage = page + newDirection;
-    if (newPage >= 0 && newPage < carouselItems.length) {
-      setPage([newPage, newDirection]);
-      setCurrentSlide(newPage);
-    } else if (newPage < 0) {
-      setPage([carouselItems.length - 1, newDirection]);
-      setCurrentSlide(carouselItems.length - 1);
-    } else {
-      setPage([0, newDirection]);
-      setCurrentSlide(0);
-    }
-  };
+  // const paginate = (newDirection: number) => {
+  //   const newPage = page + newDirection;
+  //   if (newPage >= 0 && newPage < carouselItems.length) {
+  //     setPage([newPage, newDirection]);
+  //     setCurrentSlide(newPage);
+  //   } else if (newPage < 0) {
+  //     setPage([carouselItems.length - 1, newDirection]);
+  //     setCurrentSlide(carouselItems.length - 1);
+  //   } else {
+  //     setPage([0, newDirection]);
+  //     setCurrentSlide(0);
+  //   }
+  // };
 
   return (
     <div className="flex min-h-screen flex-col bg-lama-sky">
@@ -468,54 +486,57 @@ export default function HomePage() {
           </nav>
 
           {/* Right Section - Menu Button and Login/Register */}
-          <div className="flex-1 flex justify-end items-center gap-4">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="hidden md:block"
-            >
-              <Link
-                href="#"
-                className="text-sm font-medium hover:text-rose-500 relative group"
+          {isTokenExpired() && (
+            <div className="flex-1 flex justify-end items-center gap-4">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="hidden md:block"
               >
-                登录
-                <motion.span
-                  className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-500"
-                  whileHover={{ width: '100%' }}
-                  transition={{ duration: 0.3 }}
-                />
-              </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link href="/auth/login" prefetch>
-                <Button size="sm" className="bg-rose-500 hover:bg-rose-600">
-                  免费注册
-                </Button>
-              </Link>
-            </motion.div>
-            {/* Menu Toggle Button - Visible on mobile and tablet */}
-            <motion.button
-              className="md:hidden flex items-center justify-center"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              whileTap={{ scale: 0.9 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-            >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </motion.button>
-          </div>
+                <Link
+                  href="/auth/login?loginState=0"
+                  className="text-sm font-medium hover:text-rose-500 relative group"
+                >
+                  登录
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-500"
+                    whileHover={{ width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </Link>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link href="/auth/login?loginState=1" prefetch>
+                  <Button size="sm" className="bg-rose-500 hover:bg-rose-600">
+                    免费注册
+                  </Button>
+                </Link>
+              </motion.div>
+              {/* Menu Toggle Button - Visible on mobile and tablet */}
+              <motion.button
+                className="md:hidden flex items-center justify-center"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                whileTap={{ scale: 0.9 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </motion.button>
+            </div>
+          )}
+          {!isTokenExpired() && <div onClick={() => handleOut()}>登出</div>}
         </div>
         {/* Mobile/Tablet Menu */}
         <AnimatePresence>
@@ -809,6 +830,7 @@ export default function HomePage() {
                     width={800}
                     height={800}
                     className="object-cover w-full h-full"
+                    priority // 关键！告诉 Next.js 这是首屏重要图片，需优先加载
                   />
                 </motion.div>
                 <motion.div
@@ -1381,7 +1403,7 @@ export default function HomePage() {
                         </div>
                       </div>
                       <p className="text-muted-foreground">
-                        "在这个平台上，我找到了我的另一半。通过日志和兴趣匹配，我们发现彼此有很多共同点。感谢江城缘让我们相遇！"
+                        &quot;在这个平台上，我找到了我的另一半。通过日志和兴趣匹配，我们发现彼此有很多共同点。感谢江城缘让我们相遇！&quot;
                       </p>
                     </CardContent>
                   </Card>

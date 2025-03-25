@@ -4,7 +4,7 @@ import Blogs2 from '@/assets/blogs/blog2.jpg';
 import Blogs3 from '@/assets/blogs/blog3.jpg';
 import Blogs4 from '@/assets/blogs/blog4.jpg';
 
-import { StaticImageData } from 'next/image'; // 导入 StaticImageData 类型
+import Image, { StaticImageData } from 'next/image'; // 导入 StaticImageData 类型
 
 // 定义博客数据的类型
 interface Blog {
@@ -63,7 +63,7 @@ const Blogs: React.FC = () => {
             {BlogsData.map((blog) => {
               return (
                   <div key={blog.id} className="flex flex-col items-center justify-center gap-6 p-5 max-w-[300px] mx-auto shadow-lg rounded-md bg-white hover:-translate-y-2 duration-300">
-                    <img src={blog.image.src} alt={blog.title} />
+                    <Image src={blog.image.src} alt={blog.title} />
                     <div className="space-y-2">
                       <h1 className="text-xl font-bold line-clamp-2">
                         {blog.title}

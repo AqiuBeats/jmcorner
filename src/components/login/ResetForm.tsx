@@ -7,7 +7,7 @@ import { ReturnButton } from "./components/ReturnButton";
 // import { LoginStateEnum, useLoginStateContext } from "./providers/LoginStateProvider";
 
 function ResetForm() {
-	const onFinish = (values: any) => {
+	const onFinish = (values: unknown) => {
 		console.log("Received values of form: ", values);
 	};
 

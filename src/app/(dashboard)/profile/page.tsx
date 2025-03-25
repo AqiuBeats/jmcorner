@@ -17,6 +17,7 @@ import {
 import { Camera, MessageCircle, Share2, ThumbsUp } from 'lucide-react';
 import { useMobile } from '@/hooks/component/use-mobile';
 import { StarIcon } from '@/components/star-icon';
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const { isMobile, isTablet } = useMobile();
@@ -100,7 +101,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="pt-2">
                   <p className="text-sm italic font-serif">
-                    "生活就像一盒巧克力，你永远不知道下一块是什么味道"
+                    &quot;生活就像一盒巧克力，你永远不知道下一块是什么味道&quot;
                   </p>
                 </div>
               </div>
@@ -141,7 +142,7 @@ export default function ProfilePage() {
                       key={i}
                       className="aspect-square rounded-md overflow-hidden"
                     >
-                      <img
+                      <Image
                         src={`/placeholder.svg?height=80&width=80&text=照片${i}`}
                         alt={`照片${i}`}
                         className="h-full w-full object-cover"

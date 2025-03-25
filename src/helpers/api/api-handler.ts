@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+ 
+
 import {
   errorHandler,
   jwtMiddleware,
@@ -10,7 +12,7 @@ import {
 // 定义参数接口
 interface ApiHandlerOptions {
   identity?: any; // 根据实际需求定义更具体的类型
-  schema?: any;   // 根据实际需求定义更具体的类型
+  schema?: any; // 根据实际需求定义更具体的类型
   isJwt?: boolean;
 }
 
@@ -26,7 +28,10 @@ function isPublicPath(req: any) {
   return publicPaths.includes(`${req.method}:${req.nextUrl.pathname}`);
 }
 
-function apiHandler(handler: (req: any, ...args: any[]) => Promise<any>, options: ApiHandlerOptions = {}) {
+function apiHandler(
+  handler: (req: any, ...args: any[]) => Promise<any>,
+  options: ApiHandlerOptions = {},
+) {
   return async (req: any, ...args: any[]) => {
     try {
       if (!isPublicPath(req)) {

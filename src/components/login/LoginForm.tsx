@@ -1,10 +1,9 @@
 'use client';
-import { Checkbox, Col, Divider, Form, Input, Row } from 'antd';
-import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai';
-import { DEFAULT_USER } from '@/_mock/assets';
-import { signIn } from 'next-auth/react';
-import CryptoJS from 'crypto-js';
-import { redirect } from 'next/navigation';
+import { Checkbox, Col, Form, Input, Row } from 'antd';//Divider
+// import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from 'react-icons/ai';
+// import { signIn } from 'next-auth/react';
+// import CryptoJS from 'crypto-js';
+// import { redirect } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,31 +18,64 @@ import { useLoginMutation } from '@/helpers/request';
 import { errorToString } from '@/utils/errorUtils';
 import { useRouter } from 'next/navigation'; // 引入 useRouter
 
-function LoginForm() {
+interface TypeObj {
+  loginState?: string | number; // 可能是字符串或数字
+}
+
+function LoginForm(typeObj: TypeObj) {
   const router = useRouter(); // 使用 useRouter
   const { loginState, setLoginState } = useLoginStateContext();
+  const [userPhone, setUserPhone] = useState('');
+  const [remembered, setRemember] = useState('true');
+
+  useEffect(() => {
+    if (typeObj?.loginState !== undefined) {
+      const state = parseInt(String(typeObj.loginState)); // 确保转换成字符串再解析
+      setLoginState(state);
+    }
+  }, [setLoginState, typeObj?.loginState]);
+
+  // 下次进入页面时读取
+  useEffect(() => {
+    const savedUserPhone = localStorage.getItem('remembered_phone');
+    const savedRemembered = localStorage.getItem('remembered');
+    if (savedUserPhone) {
+      setUserPhone(savedUserPhone); // 设置用户名
+    } else {
+      setUserPhone(''); // 设置用户名
+    }
+    setRemember(savedRemembered === 'true' ? 'true' : 'false'); // 设置记住密码
+  }, []);
 
   const {
     mutate: login,
-    data,
-    isSuccess,
-    isError,
+    // data,
+    // isSuccess,
+    // isError,
     isPending, // 替换 isLoading
-    error,
+    // error,
   } = useLoginMutation();
 
-  const handleClickLogin = async (values: any) => {
+  type FormObj = {
+    phone: string;
+    password: string;
+    remember: boolean;
+  };
+
+  const handleClickLogin = async (values: FormObj) => {
     const pwd = values.password;
     values.password = encodeAESData(pwd);
     login(values, {
       onSuccess: () => {
-        toast.success('登录成功!');
-        // redirect('/square');
-        router.push('/square'); // 使用 router.push 替代 redirect
+        // 登录成功后存储账号（非敏感信息）
+        localStorage.setItem('remembered_phone', values.phone);
+        localStorage.setItem('remembered', String(values.remember));
+        // toast.success('登录成功!');
+        // router.push('/square'); // 使用 router.push 替代 redirect
       },
-      onError: (error) => {
-        toast.error('登录失败:' + errorToString(error));
-      },
+      // onError: (error) => {
+      //   toast.error('登录失败:' + errorToString(error));
+      // },
     });
     // const result = await signIn('credentials', {
     //   redirect: false,
@@ -71,12 +103,13 @@ function LoginForm() {
         name="login"
         size="large"
         initialValues={{
-          remember: true,
+          remember: remembered === 'true', // 设置 Checkbox 默认值为 true
         }}
         onFinish={handleClickLogin}
       >
         <Form.Item
           name="phone"
+          initialValue={userPhone}
           rules={[
             { required: true, message: '请输入手机号' },
             {

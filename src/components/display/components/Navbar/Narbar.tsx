@@ -1,7 +1,6 @@
 import { MdMenu } from 'react-icons/md';
 import { FaRegCircleUser } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
 interface NavbarMenu {
