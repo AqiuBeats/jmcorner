@@ -11,6 +11,7 @@ import { useMobile } from '@/hooks/component/use-mobile';
 import { HeartIcon } from '@/components/heart-icon';
 import { StarIcon } from '@/components/star-icon';
 import { HeartParticles } from '@/components/heart-particles';
+import Image from 'next/image';
 
 // 模拟用户数据
 const potentialMatches = [
@@ -65,7 +66,7 @@ const potentialMatches = [
 ];
 
 export default function MatchPage() {
-  const { isMobile, isTablet } = useMobile();
+  const { isMobile} = useMobile();//isTablet
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -177,7 +178,7 @@ export default function MatchPage() {
                 <div
                   className={`relative ${imageHeight} bg-gradient-to-b from-mint-mambo/20 to-background`}
                 >
-                  <img
+                  <Image
                     src={currentUser.avatar || '/placeholder.svg'}
                     alt={currentUser.name}
                     className="w-full h-full object-cover"

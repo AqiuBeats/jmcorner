@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import prisma from '@/lib/prisma';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { auth } from '@/helpers';
 import { decodeAESData } from '@/utils/aesUtils';
 
@@ -61,7 +61,13 @@ const getAll = async ({
 };
 
 //获取单个用户,并对其进行修改
-const update = async ({ id, params }: { id: string; params: any }) => {
+const update = async ({
+  id,
+  params,
+}: {
+  id: string;
+  params: Prisma.UserUpdateInput;
+}) => {
   try {
     const user = await prisma.user.update({
       where: {

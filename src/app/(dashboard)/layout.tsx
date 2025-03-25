@@ -17,7 +17,10 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ParallaxBackground } from '@/components/parallax-background';
 import { HeartIcon } from '@/components/heart-icon';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'], // 减少字体体积
+  display: 'swap', // 确保文字始终可见
+});
 
 export default function RootLayout({
   children,
@@ -26,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body className="{inter.className}">
+      <body className={inter.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

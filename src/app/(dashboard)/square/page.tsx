@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { useMobile } from '@/hooks/component/use-mobile';
 import { HeartIcon } from '@/components/heart-icon';
 import { StarIcon } from '@/components/star-icon';
+import Image from 'next/image';
 
 export default function SquarePage() {
   const { isMobile, isTablet } = useMobile();
@@ -150,10 +151,12 @@ export default function SquarePage() {
                   >
                     {post.images.map((img, idx) => (
                       <div key={idx} className="rounded-md overflow-hidden">
-                        <img
+                        <Image
                           src={img || '/placeholder.svg'}
                           alt={`图片 ${idx + 1}`}
                           className="w-full h-auto object-cover"
+                          height={200}
+                          width={400}
                         />
                       </div>
                     ))}

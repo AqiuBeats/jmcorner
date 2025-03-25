@@ -4,7 +4,7 @@ import { Form, Input } from 'antd';
 // import userService from "@/api/services/userService";
 
 import { ReturnButton } from './components/ReturnButton';
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -14,38 +14,35 @@ import {
   LoginStateEnum,
   useLoginStateContext,
 } from '@/components/login/components/LoginStateProvider';
-import { User } from '@prisma/client';
+// import { User } from '@prisma/client';
 import { errorToString } from '@/utils/errorUtils';
 
 function RegisterForm() {
   // const { t } = useTranslation();
   //? Create User
   const [form] = Form.useForm();
-  //   const [createUser, { data, isSuccess, isError, isLoading, error }] =
-  //     useCreateUserMutation(userData);
 
   const {
     mutate: createUser,
-    data,
-    isSuccess,
-    isError,
+    // data,
+    // isSuccess,
+    // isError,
     isPending, // 替换 isLoading
-    error,
+    // error,
   } = useCreateUserMutation();
 
   const { loginState, backToLogin } = useLoginStateContext();
 
-  const handleClickRegister = (values: any) => {
+  type FormObj = {
+    phone: string;
+    password: string;
+    remember: boolean;
+  };
+
+  const handleClickRegister = (values: FormObj) => {
     const pwd = values.password;
     values.password = encodeAESData(pwd);
-    createUser(values, {
-      onSuccess: () => {
-        toast.success('注册成功!');
-      },
-      onError: (error) => {
-        toast.error('注册失败:' + errorToString(error));
-      },
-    });
+    createUser(values);
   };
 
   if (loginState !== LoginStateEnum.REGISTER) return null;

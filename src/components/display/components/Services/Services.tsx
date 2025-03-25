@@ -3,6 +3,7 @@ import icon2 from '@/assets/icons/obj2.png';
 import icon3 from '@/assets/icons/obj3.png';
 import { motion } from 'framer-motion';
 import { fadeUp } from '@/components/display/FadeUp';
+import Image from 'next/image';
 
 const ServicesData = [
   {
@@ -52,7 +53,7 @@ const Services = () => {
                   initial="hidden"
                   whileInView={'show'}
                 >
-                  <img src={service.icon.src} alt="" className="w-[100px] mb-4" />
+                  <Image src={service.icon.src} alt="" className="w-[100px] mb-4" />
                   <div className="text-center space-y-2">
                     <h1 className="text-2xl font-bold">{service.title}</h1>
                     <p className="text-center text-sm text-black/75">

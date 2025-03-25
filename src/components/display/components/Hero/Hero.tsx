@@ -63,7 +63,7 @@ const headphoneData = [
 const Hero = () => {
   const [activeHeadphone, setActiveHeadphone] = useState(headphoneData[0]);
 
-  const handleActiveHeadphone = (headphone: any) => {
+  const handleActiveHeadphone = (headphone: unknown) => {
     setActiveHeadphone(headphone);
   };
 
