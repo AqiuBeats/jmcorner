@@ -3,25 +3,25 @@ import { apiHandler, setJson } from '@/helpers/api';
 import joi from 'joi';
 
 const login = apiHandler(
-  async (req: { json: () => any }) => {
-    const body = await req.json();
-    const result = await usersRepo.authenticate(body);
+  async (_req, { body }) => {
+    const newUser = await usersRepo.authenticate(body);
     return setJson({
-      data: result,
+      data: newUser,
       message: '登录成功',
+      status: 201, // 创建资源返回201
     });
   },
   {
-    schema: joi.object({
-      phone: joi
-        .string()
-        .pattern(/^1[3-9]\d{9}$/) // 校验手机号
-        .required(),
-      // password: joi
-      //   .string()
-      //   .min(6) // 密码至少 6 位数
-      //   .required(),
-    }),
+    methods: ['POST'],
+    schema: {
+      body: joi.object({
+        phone: joi
+          .string()
+          .pattern(/^1[3-9]\d{9}$/)
+          .required(),
+        password: joi.string().required(),
+      }),
+    },
   },
 );
 
