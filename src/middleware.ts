@@ -1,74 +1,83 @@
-// middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { AuthService } from '@/helpers';
 import jwt from 'jsonwebtoken';
-
-// 可以配置需要验证的路径
-const protectedPaths = ['/dashboard', '/profile', '/settings'];
+import {
+  REDIRECT_PATH,
+  PUBLIC_PATHS,
+  PROTECTED_API_PREFIXES,
+  PROTECTED_PAGE_PATHS,
+} from '@/config/auth-paths'; // 建议的路径配置文件
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 检查当前路径是否需要验证
-  const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
+  // 1. 检查是否为公开路径（精确匹配或前缀匹配）
+  const isPublicPath = PUBLIC_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(path + '/'),
+  );
 
-  if (!isProtected) {
+  if (isPublicPath) {
     return NextResponse.next();
   }
 
-  // 从 cookie 或 header 获取 token
-  const token =
-    request.cookies.get('authToken')?.value ||
-    request.headers.get('Authorization')?.replace('Bearer ', '');
+  // 2. 检查是否为需要认证的API路径
+  const isProtectedApi = PROTECTED_API_PREFIXES.some((prefix) =>
+    pathname.startsWith(prefix),
+  );
 
-  console.log('token', token);
+  // 3. 检查是否为需要认证的页面路径（支持动态路由）
+  const isProtectedPage = PROTECTED_PAGE_PATHS.some((path) => {
+    // 基础路径完全匹配（如/square）
+    if (pathname === path) return true;
 
-  if (!token) {
-    // 如果没有 token，重定向到登录页
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
+    // 处理动态路由（如/square/[id]）
+    const basePath = path.split('[')[0]; // 提取动态路由前的基础路径
+    return pathname.startsWith(basePath);
+  });
+
+  // 如果不是需要认证的API或页面，则放行
+  if (!isProtectedApi && !isProtectedPage) {
+    return NextResponse.next();
   }
 
   try {
-    // 验证 token
-    const decoded = jwt.verify(
-      token,
-      process.env.NEXT_PUBLIC_JWT_SECRET as string,
-    );
+    // 4. 统一使用AuthService验证
+    const userId = await AuthService.verifyRequest(request);
 
-    // 可以在这里添加额外的验证逻辑，比如检查用户角色等
+    // 5. 将用户ID注入请求头（供API路由使用）
+    const headers = new Headers(request.headers);
+    headers.set('x-user-id', userId || '');
 
-    // 如果 token 有效，继续请求
-    return NextResponse.next();
-  } catch (err) {
-    // token 无效或过期
-    console.error('JWT verification failed:', err);
+    // 6. 继续请求
+    return NextResponse.next({
+      request: { headers },
+    });
+  } catch (error) {
+    console.error('认证失败:', error);
 
-    // 重定向到登录页，并携带原始路径以便登录后跳转
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('from', pathname);
-    loginUrl.searchParams.set('expired', 'true');
+    // 7. 处理认证失败
+    if (isProtectedApi) {
+      // API返回401 JSON响应
+      return NextResponse.json(
+        { message: '未授权', error: (error as Error).message },
+        { status: 401 },
+      );
+    } else {
+      // 页面路由重定向到登录页
+      const loginUrl = new URL(REDIRECT_PATH, request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      if (error instanceof jwt.TokenExpiredError) {
+        loginUrl.searchParams.set('expired', 'true');
+      }
 
-    // 清除无效的 token cookie
-    const response = NextResponse.redirect(loginUrl);
-    response.cookies.delete('authToken');
-
-    return response;
+      const response = NextResponse.redirect(loginUrl);
+      response.cookies.delete('authToken');
+      return response;
+    }
   }
 }
 
-// 配置 Middleware 匹配规则
 export const config = {
-  matcher: [
-    /*
-     * 匹配所有请求路径，除了:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - 公开页面 (login, register, etc.)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|login|register).*)',
-  ],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

@@ -30,23 +30,35 @@ import {
   AnimatePresence,
 } from 'framer-motion';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useLoginOutMutation } from '@/helpers/request';
 
 import useAuthStore from '@/hooks/useAuthStore'; // 导入 Zustand store
 
 export default function HomePage() {
+  const {
+    mutate: logout,
+    // data,
+    // isSuccess,
+    // isError,
+    // isPending, // 替换 isLoading
+    // error,
+  } = useLoginOutMutation();
+
   //判断token是否失效
   const { token, isTokenExpired, getTokenExpiration, clearToken } =
     useAuthStore();
-  if (isTokenExpired()) {
-    console.log('isTokenExpired', 'token已经过期'); //会短暂的进入过期状态,然后更正
-  } else {
-    console.log('token', token);
-    console.log('token过期时间', getTokenExpiration());
-  }
+
+  console.log('token', token);
+  // if (isTokenExpired()) {
+  //   console.log('isTokenExpired', 'token已经过期'); //会短暂的进入过期状态,然后更正
+  // } else {
+  //   console.log('token', token);
+  //   console.log('token过期时间', getTokenExpiration());
+  // }
 
   const handleOut = () => {
     console.log('handleOut');
-    clearToken();
+    logout();
   };
 
   // Section refs for scrolling

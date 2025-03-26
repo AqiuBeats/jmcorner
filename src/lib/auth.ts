@@ -77,12 +77,12 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id; // 添加用户 ID 到 JWT
         // token.name = user.name;
         // 自定义 JWT 生成
-        if (!process.env.NEXT_PUBLIC_JWT_SECRET) {
+        if (!process.env.JWT_SECRET) {
           throw new Error('JWT_SECRET is not defined');
         }
         const jwt_token = jwt.sign(
           { userId: user.id },
-          process.env.NEXT_PUBLIC_JWT_SECRET,
+          process.env.JWT_SECRET,
           {
             expiresIn: tokenExpTime,
           },

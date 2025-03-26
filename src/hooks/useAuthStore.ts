@@ -6,7 +6,7 @@ import { create } from 'zustand';
 interface AuthState {
   user: User | null;
   token: string | null;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
   setToken: (token: string) => void;
   clearToken: () => void; // 新增：清除 token
   isTokenExpired: () => boolean; // 新增：检查 token 是否过期
@@ -19,7 +19,7 @@ const useAuthStore = create<AuthState>((set, get) => ({
     typeof window !== 'undefined'
       ? localStorage.getItem('token') || null
       : null, // 条件检查
-  setUser: (user: User) => set({ user }),
+  setUser: (user: User | null) => set({ user }),
 
   setToken: (token: string) => {
     if (typeof window !== 'undefined') {

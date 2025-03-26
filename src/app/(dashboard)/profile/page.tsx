@@ -145,6 +145,8 @@ export default function ProfilePage() {
                       <Image
                         src={`/placeholder.svg?height=80&width=80&text=照片${i}`}
                         alt={`照片${i}`}
+                        width={80}
+                        height={80}
                         className="h-full w-full object-cover"
                       />
                     </div>

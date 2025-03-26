@@ -188,7 +188,7 @@ export const useGetData = <T>(
  * @param initialData 初始数据（可选，用于乐观更新）
  * @param config 扩展配置（如成功回调、错误处理等）
  */
-export const usePostData = <T, U>(
+export const usePostData = <T, U = void>(
   url: string,
   config?: {
     onSuccess?: (data: T) => void;
@@ -224,7 +224,7 @@ export const usePostData = <T, U>(
  * @param initialData 初始数据（可选，用于乐观更新）
  * @param config 扩展配置（如成功回调、错误处理等）
  */
-export const usePatchData = <T, U>(
+export const usePatchData = <T, U = void>(
   url: string,
   config?: {
     onSuccess?: (data: T) => void;

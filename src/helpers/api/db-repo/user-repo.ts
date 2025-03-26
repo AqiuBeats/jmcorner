@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import prisma from '@/lib/prisma';
 import { Prisma, User } from '@prisma/client';
-import { auth } from '@/helpers';
+import { AuthService } from '@/helpers';
 import { decodeAESData } from '@/utils/aesUtils';
 
 //获取所有用户
@@ -96,7 +96,7 @@ const create = async (params: User) => {
   const newUser = await prisma.user.create({
     data: { phone, password: hashedPassword },
   });
-  const token = auth.createAccessToken({ id: newUser.id });
+  const token = await AuthService.createAccessToken({ id: newUser.id });
 
   return {
     user: {
@@ -122,7 +122,7 @@ const authenticate = async (params: User) => {
   if (!user || !(await bcrypt.compare(decode_pwd, user.password))) {
     throw new Error('密码错误');
   }
-  const token = auth.createAccessToken({ id: user.id });
+  const token = await AuthService.createAccessToken({ id: user.id });
   return {
     user: {
       id: user.id,

@@ -7,7 +7,7 @@ export default function useVerify(): boolean {
   const { token } = useAuthStore();
   if (!token) return false;
   let status: boolean = false;
-  jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET as string, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
     if (err) status = false;
     if (decoded) status = true;
   });

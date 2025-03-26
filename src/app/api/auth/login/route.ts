@@ -4,15 +4,17 @@ import joi from 'joi';
 
 const login = apiHandler(
   async (_req, { body }) => {
-    const newUser = await usersRepo.authenticate(body);
+    const { user, token } = await usersRepo.authenticate(body);
     return setJson({
-      data: newUser,
+      data: { user, token },
       message: '登录成功',
-      status: 201, // 创建资源返回201
+      status: 200, // 创建资源返回201
+      authToken: token,
     });
   },
   {
-    methods: ['POST'],
+    methods: ['POST'], //此"POST"用于早期验证,统一错误处理：如果方法不匹配会自动返回 405 Method Not Allowed 错误。
+    isPublic: true, //公开路由
     schema: {
       body: joi.object({
         phone: joi
@@ -25,7 +27,7 @@ const login = apiHandler(
   },
 );
 
-// 导出一个异步函数，用于处理 POST 请求，并返回一个包含用户信息的 JSON 响应。
+// 此"POST"告诉 Next.js 该文件（路由）需要响应 POST 请求。
 export const POST = login;
 //这行代码用于配置 Next.js 的动态渲染行为。表示强制将此路由标记为动态路由，即使它可能包含一些静态内容。
 //这种设置通常用于需要在服务器端动态生成内容的场景，确保每次请求都由服务器处理，而不是提前静态生成。

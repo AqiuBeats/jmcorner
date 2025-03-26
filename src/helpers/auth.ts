@@ -2,9 +2,9 @@ import { EXP_TIME } from '@/utils/constants';
 import jwt from 'jsonwebtoken';
 
 // 确保环境变量存在，否则抛出错误
-const accessTokenSecret = process.env.NEXT_PUBLIC_JWT_SECRET;
+const accessTokenSecret = process.env.JWT_SECRET;
 if (!accessTokenSecret) {
-  throw new Error('Environment variable NEXT_PUBLIC_JWT_SECRET is not defined');
+  throw new Error('Environment variable JWT_SECRET is not defined');
 }
 
 const verifyToken = async (

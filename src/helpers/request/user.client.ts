@@ -43,6 +43,7 @@ const useLoginMutation = () => {
       let response = data.data;
       // 更新用户数据缓存
       queryClient.setQueryData(['User'], response.user);
+      console.log('login success', response.token);
       setToken(response.token);
       setUser(response.user);
       toast.success('登录成功!');
@@ -68,6 +69,28 @@ const useCreateUserMutation = () => {
     },
     onError: (error: LoginError) => {
       toast.error('注册失败:' + error.message);
+    },
+    onSettled: () => {
+      // 确保最终刷新用户数据
+      queryClient.invalidateQueries({ queryKey: ['User'] });
+    },
+  });
+};
+
+//用户登录(无参数POST请求举例)
+const useLoginOutMutation = () => {
+  const { clearToken, setUser } = useAuthStore();
+
+  return usePostData<null, void>('/api/auth/logout', {
+    onSuccess: () => {
+      // 更新用户数据缓存
+      queryClient.setQueryData(['User'], null);
+      clearToken();
+      setUser(null);
+      toast.success('登出成功');
+    },
+    onError: (error: LoginError) => {
+      toast.error('登出失败:' + error.message);
     },
     onSettled: () => {
       // 确保最终刷新用户数据
@@ -128,6 +151,7 @@ export {
   useLoginMutation,
   //   useGetUserInfoQuery,
   useCreateUserMutation,
+  useLoginOutMutation,
   //   useGetUsersQuery,
   //   useDeleteUserMutation,
   //   useEditUserMutation,
