@@ -57,7 +57,7 @@ export default function RootLayout({
                       className="flex items-center text-sm font-medium transition-colors text-menu-gray hover:text-white"
                     >
                       <Home className="h-4 w-4 mr-1 icon-outline" />
-                      首页1
+                      首页
                     </Link>
                     <Link
                       href="/square"
