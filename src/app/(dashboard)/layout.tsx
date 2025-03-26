@@ -38,21 +38,22 @@ export default function RootLayout({
         >
           <ParallaxBackground>
             <div className="flex min-h-screen flex-col">
-              {/* bg-mint-mambo/80 glassmorphism*/}
+              {/* bg-mint-mambo/80 */}
               <header className="sticky top-0 z-50 w-full border-b  bg-mint-mambo/80">
                 <div className="container flex h-14 items-center mx-auto">
                   <Link
                     href="/"
                     className="flex items-center font-serif font-bold text-xl mr-6"
                   >
+                    <span className="text-white">江</span>
+                    <span className="text-white">城</span>
                     <span className="text-white">缘</span>
-                    <span className="text-white">分</span>
                   </Link>
 
                   {/* Desktop Navigation */}
                   <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 mx-6">
                     <Link
-                      href="/"
+                      href="/square"
                       className="flex items-center text-sm font-medium transition-colors text-menu-gray hover:text-white"
                     >
                       <Home className="h-4 w-4 mr-1 icon-outline" />
@@ -96,7 +97,7 @@ export default function RootLayout({
                     >
                       <Bell className="h-5 w-5 icon-outline" />
                     </Button>
-                    <div className="hidden md:block avatar-glassmorphism rounded-full">
+                    <div className="hidden md:block  rounded-full">
                       <Avatar>
                         <AvatarImage
                           src="/placeholder.svg?height=32&width=32"
@@ -119,12 +120,12 @@ export default function RootLayout({
                       </SheetTrigger>
                       <SheetContent
                         side="right"
-                        className="w-[80vw] sm:w-[350px] glassmorphism"
+                        className="w-[80vw] sm:w-[350px] "
                       >
                         <div className="flex flex-col h-full">
                           <div className="flex items-center justify-between py-4 border-b">
                             <div className="flex items-center gap-2">
-                              <div className="avatar-glassmorphism rounded-full">
+                              <div className=" rounded-full">
                                 <Avatar>
                                   <AvatarImage
                                     src="/placeholder.svg?height=32&width=32"
@@ -194,7 +195,7 @@ export default function RootLayout({
               </header>
 
               {/* Mobile Bottom Navigation */}
-              <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t glassmorphism">
+              <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t ">
                 <div className="flex justify-around items-center h-16">
                   <Link
                     href="/"

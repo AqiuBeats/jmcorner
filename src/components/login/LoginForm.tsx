@@ -70,7 +70,7 @@ function LoginForm(typeObj: TypeObj) {
         localStorage.setItem('remembered_phone', values.phone);
         localStorage.setItem('remembered', String(values.remember));
         // toast.success('登录成功!');
-        // router.push('/square'); // 使用 router.push 替代 redirect
+        router.push('/square'); // 使用 router.push 替代 redirect
       },
       // onError: (error) => {
       //   toast.error('登录失败:' + errorToString(error));

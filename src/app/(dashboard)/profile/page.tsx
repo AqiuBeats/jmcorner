@@ -50,10 +50,10 @@ export default function ProfilePage() {
       >
         {/* Left sidebar - User info */}
         <div className="space-y-4">
-          <Card className="border-light-lilac glassmorphism">
+          <Card className="border-light-lilac ">
             <CardHeader className="pb-2">
               <div className="flex items-center space-x-4">
-                <div className="avatar-glassmorphism rounded-full h-20 w-20 border-4 border-mint-mambo/20">
+                <div className=" rounded-full h-20 w-20 border-4 border-mint-mambo/20">
                   <Avatar className="h-20 w-20">
                     <AvatarImage
                       src="/placeholder.svg?height=80&width=80"
@@ -110,7 +110,7 @@ export default function ProfilePage() {
               {!checkedIn ? (
                 <Button
                   onClick={handleCheckIn}
-                  className="w-full bg-calm-blue hover:bg-calm-blue/90 glassmorphism"
+                  className="w-full bg-calm-blue hover:bg-calm-blue/90 "
                 >
                   今日签到
                 </Button>
@@ -131,7 +131,7 @@ export default function ProfilePage() {
 
           {/* 相册卡片 - 在移动端可以选择性隐藏或简化 */}
           {(!isMobile || (isMobile && !isTablet)) && (
-            <Card className="border-light-lilac glassmorphism">
+            <Card className="border-light-lilac ">
               <CardHeader>
                 <CardTitle className="text-lg font-serif">我的相册</CardTitle>
               </CardHeader>
@@ -166,7 +166,7 @@ export default function ProfilePage() {
         <div className={isMobile || isTablet ? '' : 'col-span-2'}>
           <div className="space-y-6">
             {/* Post new thought */}
-            <Card className="border-light-lilac glassmorphism">
+            <Card className="border-light-lilac ">
               <CardHeader>
                 <CardTitle className="text-lg font-serif">发表动态</CardTitle>
               </CardHeader>
@@ -189,7 +189,7 @@ export default function ProfilePage() {
                           <Camera className="h-4 w-4 icon-outline" />
                         </Button>
                         <Button
-                          className="bg-calm-blue hover:bg-calm-blue/90 glassmorphism"
+                          className="bg-calm-blue hover:bg-calm-blue/90 "
                           onClick={handlePostThought}
                         >
                           发布
@@ -220,7 +220,7 @@ export default function ProfilePage() {
                             <Camera className="h-4 w-4 icon-outline" />
                           </Button>
                         </div>
-                        <Button className="bg-calm-blue hover:bg-calm-blue/90 glassmorphism">
+                        <Button className="bg-calm-blue hover:bg-calm-blue/90 ">
                           发布日志
                         </Button>
                       </div>
@@ -233,11 +233,11 @@ export default function ProfilePage() {
             {/* Thoughts feed */}
             <div className="space-y-4">
               {thoughts.map((thought, index) => (
-                <Card key={index} className="border-light-lilac glassmorphism">
+                <Card key={index} className="border-light-lilac ">
                   <CardHeader className="pb-2">
                     <div className="flex justify-between">
                       <div className="flex items-center space-x-2">
-                        <div className="avatar-glassmorphism rounded-full">
+                        <div className=" rounded-full">
                           <Avatar>
                             <AvatarImage
                               src="/placeholder.svg?height=40&width=40"

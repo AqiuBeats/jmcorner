@@ -98,11 +98,11 @@ export default function SquarePage() {
         <div className={isMobile || isTablet ? '' : 'col-span-2'}>
           <div className="space-y-6">
             {posts.map((post) => (
-              <Card key={post.id} className="border-light-lilac glassmorphism">
+              <Card key={post.id} className="border-light-lilac ">
                 <CardHeader>
                   <div className="flex justify-between">
                     <div className="flex items-center space-x-2">
-                      <div className="avatar-glassmorphism rounded-full">
+                      <div className=" rounded-full">
                         <Avatar>
                           <AvatarImage
                             src={post.user.avatar}
@@ -189,7 +189,7 @@ export default function SquarePage() {
                       )}
                     </Button>
                     <Button
-                      className="bg-calm-blue hover:bg-calm-blue/90 text-white glassmorphism"
+                      className="bg-calm-blue hover:bg-calm-blue/90 text-white "
                       size="sm"
                     >
                       <MessageCircle className="h-4 w-4 mr-1 icon-outline" />
@@ -205,7 +205,7 @@ export default function SquarePage() {
         {/* Right sidebar - only show on desktop */}
         {!isMobile && !isTablet && (
           <div className="space-y-6">
-            <Card className="border-light-lilac glassmorphism">
+            <Card className="border-light-lilac ">
               <CardHeader>
                 <CardTitle className="text-lg font-serif">热门用户</CardTitle>
               </CardHeader>
@@ -229,7 +229,7 @@ export default function SquarePage() {
                 ].map((user, idx) => (
                   <div key={idx} className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <div className="avatar-glassmorphism rounded-full">
+                      <div className=" rounded-full">
                         <Avatar>
                           <AvatarImage src={user.avatar} alt={user.name} />
                           <AvatarFallback>{user.name[0]}</AvatarFallback>
@@ -265,7 +265,7 @@ export default function SquarePage() {
               </CardContent>
             </Card>
 
-            <Card className="border-light-lilac glassmorphism">
+            <Card className="border-light-lilac ">
               <CardHeader>
                 <CardTitle className="text-lg font-serif">今日推荐</CardTitle>
               </CardHeader>
@@ -292,7 +292,7 @@ export default function SquarePage() {
               </CardFooter>
             </Card>
 
-            <Card className="border-light-lilac glassmorphism">
+            <Card className="border-light-lilac ">
               <CardHeader className="pb-2">
                 <CardTitle className="text-lg flex items-center font-serif">
                   <Calendar className="h-5 w-5 mr-2 icon-outline" />
@@ -322,7 +322,7 @@ export default function SquarePage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-calm-blue hover:bg-calm-blue/90 glassmorphism">
+                <Button className="w-full bg-calm-blue hover:bg-calm-blue/90 ">
                   立即签到
                 </Button>
               </CardFooter>
@@ -333,7 +333,7 @@ export default function SquarePage() {
 
       {/* 移动端签到卡片 - 只在移动端显示 */}
       {isMobile && (
-        <Card className="mt-6 border-light-lilac glassmorphism">
+        <Card className="mt-6 border-light-lilac ">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center font-serif">
               <Calendar className="h-5 w-5 mr-2 icon-outline" />
@@ -344,7 +344,7 @@ export default function SquarePage() {
             <div className="flex justify-center items-center py-4">
               <Button
                 size="lg"
-                className="w-full max-w-xs bg-calm-blue hover:bg-calm-blue/90 glassmorphism"
+                className="w-full max-w-xs bg-calm-blue hover:bg-calm-blue/90 "
               >
                 立即签到
               </Button>

@@ -257,61 +257,6 @@
   }
 }
 
-/* 自定义组件类 */
-@layer components {
-  .glassmorphism {
-    @apply bg-white/25          /* 背景白色 25% 透明 */
-      backdrop-blur-lg     /* 背景模糊 */
-      border border-white/20 /* 白色边框 20% 透明 */
-      shadow-lg; /* 大投影 */
-  }
-
-  .avatar-glassmorphism {
-    @apply relative overflow-hidden;
-  }
-
-  .icon-outline {
-    @apply stroke-[1.5] fill-none;
-  }
-}
-
-/* 玻璃拟态效果 */
-.glassmorphism {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-}
-
-.avatar-glassmorphism {
-  position: relative;
-  overflow: hidden;
-}
-
-.avatar-glassmorphism::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.4),
-    rgba(255, 255, 255, 0.1)
-  );
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: inherit;
-  z-index: 1;
-}
-
-.avatar-glassmorphism img {
-  position: relative;
-  z-index: 0;
-}
-
 /* 粒子动画 */
 @keyframes particle-appear {
   0% {

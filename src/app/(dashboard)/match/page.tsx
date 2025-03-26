@@ -174,17 +174,19 @@ export default function MatchPage() {
               exit="exit"
               className="absolute w-full h-full"
             >
-              <Card className="w-full h-full overflow-hidden border-light-lilac border-2 glassmorphism">
+              <Card className="w-full h-full overflow-hidden border-light-lilac border-2 ">
                 <div
                   className={`relative ${imageHeight} bg-gradient-to-b from-mint-mambo/20 to-background`}
                 >
                   <Image
                     src={currentUser.avatar || '/placeholder.svg'}
                     alt={currentUser.name}
+                    width={300}
+                    height={300}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                    <div className="glassmorphism text-white p-2 rounded-lg">
+                    <div className=" text-white p-2 rounded-lg">
                       <h3 className={`${headingSize} font-serif font-bold`}>
                         {currentUser.name}, {currentUser.age}
                       </h3>
@@ -203,7 +205,7 @@ export default function MatchPage() {
                         </Badge>
                       </div>
                     </div>
-                    <div className="glassmorphism text-white p-2 rounded-full">
+                    <div className=" text-white p-2 rounded-full">
                       <Badge className="bg-soft-peach border-none text-foreground">
                         心动指数 {currentUser.compatibility}%
                       </Badge>
@@ -250,7 +252,7 @@ export default function MatchPage() {
                     />
                   </Button>
 
-                  <Button className="bg-calm-blue hover:bg-calm-blue/90 text-white glassmorphism">
+                  <Button className="bg-calm-blue hover:bg-calm-blue/90 text-white ">
                     <MessageSquare className="h-4 w-4 mr-2 icon-outline" />
                     发送消息
                   </Button>
@@ -283,7 +285,7 @@ export default function MatchPage() {
                 onComplete={() => setShowParticles(false)}
               />
 
-              <div className="bg-background rounded-xl p-4 sm:p-6 max-w-sm w-full text-center border-2 border-light-lilac glassmorphism">
+              <div className="bg-background rounded-xl p-4 sm:p-6 max-w-sm w-full text-center border-2 border-light-lilac ">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: [0, 1.2, 1] }}
@@ -309,7 +311,7 @@ export default function MatchPage() {
                 >
                   <div className="relative">
                     <Avatar
-                      className={`${isMobile ? 'h-16 w-16' : 'h-20 w-20'} border-4 border-mint-mambo avatar-glassmorphism animate-float`}
+                      className={`${isMobile ? 'h-16 w-16' : 'h-20 w-20'} border-4 border-mint-mambo  animate-float`}
                     >
                       <AvatarImage
                         src="/placeholder.svg?height=80&width=80&text=你"
@@ -326,7 +328,7 @@ export default function MatchPage() {
                   </div>
                   <div className="relative">
                     <Avatar
-                      className={`${isMobile ? 'h-16 w-16' : 'h-20 w-20'} border-4 border-mint-mambo avatar-glassmorphism animate-float`}
+                      className={`${isMobile ? 'h-16 w-16' : 'h-20 w-20'} border-4 border-mint-mambo  animate-float`}
                       style={{ animationDelay: '0.3s' }}
                     >
                       <AvatarImage
@@ -353,7 +355,7 @@ export default function MatchPage() {
                   className="flex gap-4"
                 >
                   <Button
-                    className="w-full bg-calm-blue hover:bg-calm-blue/90 glassmorphism"
+                    className="w-full bg-calm-blue hover:bg-calm-blue/90 "
                     onClick={() => {
                       setShowMatchAnimation(false);
                       setShowParticles(false);
