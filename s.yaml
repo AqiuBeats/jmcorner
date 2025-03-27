@@ -25,13 +25,10 @@ services:
         timeout: 60
         codeUri: ./
         diskSize: 512
-        caPort: 9000
+        caPort: 3000
         customRuntimeConfig:
-          command:
-            - pnpm
-          args:
-            - run
-            - start
+          command: ["pnpm"]
+          args: ["run", "start"]  # 确保这是正确的启动命令
       triggers:
         - name: httpTrigger
           type: http
