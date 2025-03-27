@@ -4,9 +4,9 @@ access: 'undefined'
 
 vars:
   region: 'cn-hangzhou'
-  functionName: 'next'
+  functionName: 'jmcorner-ckun'
   service:
-    name: 'web-framework'
+    name: 'serverless-devs-jmcorner'
     description: 'Serverless Devs Web Framework Service'
 services:
   framework:
