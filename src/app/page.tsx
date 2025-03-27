@@ -481,19 +481,19 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
               >
-                <Link href="/square" prefetch>
-                  <button
-                    // onClick={() => scrollToSection(item.ref)}
-                    className="text-sm font-medium hover:text-rose-500 relative group"
-                  >
-                    {item.name}
-                    <motion.span
-                      className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-500"
-                      whileHover={{ width: '100%' }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </button>
-                </Link>
+                {/* <Link href="/square" prefetch> */}
+                <button
+                  onClick={() => scrollToSection(item.ref)}
+                  className="text-sm font-medium hover:text-rose-500 relative group"
+                >
+                  {item.name}
+                  <motion.span
+                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-500"
+                    whileHover={{ width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </button>
+                {/* </Link> */}
               </motion.div>
             ))}
           </nav>
