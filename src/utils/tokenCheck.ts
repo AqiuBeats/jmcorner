@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // src/utils/auth.ts
 import { jwtVerify } from 'jose';
 import { cookies } from 'next/headers';

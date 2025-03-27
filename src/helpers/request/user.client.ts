@@ -40,7 +40,7 @@ const useLoginMutation = () => {
 
   return usePostData<LoginResponse, LoginData>('/api/auth/login', {
     onSuccess: (data) => {
-      let response = data.data;
+      const response = data.data;
       // 更新用户数据缓存
       queryClient.setQueryData(['User'], response.user);
       console.log('login success', response.token);
@@ -62,7 +62,7 @@ const useLoginMutation = () => {
 const useCreateUserMutation = () => {
   return usePostData<LoginResponse, LoginData>('/api/auth/register', {
     onSuccess: (data) => {
-      let response = data.data;
+      const response = data.data;
       // 更新用户数据缓存
       queryClient.setQueryData(['User'], response.user);
       toast.success('注册成功!');

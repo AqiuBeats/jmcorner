@@ -181,9 +181,9 @@ const resetPassword = async ({
         password: hashedPassword, // 更新为哈希后的密码
       },
     });
-    // if (updatedUser) {
-    //   throw '重置密码成功';
-    // }
+    if (updatedUser) {
+      // throw '重置密码成功';
+    }
   } catch (error) {
     throw new Error('重置密码失败:' + error);
   }

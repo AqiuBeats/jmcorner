@@ -1,6 +1,2 @@
-export * from './auth'
-// export * from './db'
-// export * from './db-repo'
-// export * from './getQuery'
 export * from '@/helpers/api/db-repo'
 export * from '@/helpers/authService'

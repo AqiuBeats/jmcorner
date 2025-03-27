@@ -3,15 +3,13 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { DefaultSession } from 'next-auth';
-import jwt from 'jsonwebtoken';
 import { EXP_TIME } from '@/utils/constants';
 import { decodeAESData } from '@/utils/aesUtils';
 
 const adapter = PrismaAdapter(prisma);
 
 const expTime = EXP_TIME;
-const tokenExpTime = EXP_TIME;
+// const tokenExpTime = EXP_TIME;
 
 declare module 'next-auth' {
   interface Session {
@@ -59,6 +57,7 @@ export const authOptions: NextAuthOptions = {
             throw new Error('密码错误');
           }
         } catch (error) {
+          console.log('解密失败', error);
           throw new Error('解密失败');
         }
         if (user) {
@@ -80,15 +79,14 @@ export const authOptions: NextAuthOptions = {
         if (!process.env.JWT_SECRET) {
           throw new Error('JWT_SECRET is not defined');
         }
-        const jwt_token = jwt.sign(
-          { userId: user.id },
-          process.env.JWT_SECRET,
-          {
-            expiresIn: tokenExpTime,
-          },
-        );
-        // console.log('jwt_token', jwt_token);
-        token.jwt = jwt_token;
+        // const jwt_token = jwt.sign(
+        //   { userId: user.id },
+        //   process.env.JWT_SECRET,
+        //   {
+        //     expiresIn: tokenExpTime,
+        //   },
+        // );
+        // token.jwt = jwt_token;
       }
       return token;
       // return { ...token, ...user };

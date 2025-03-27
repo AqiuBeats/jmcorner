@@ -1,7 +1,7 @@
 import { QRCode } from "antd";
 // import { useTranslation } from "react-i18next";
 
-import { ReturnButton } from "./components/ReturnButton";
+// import { ReturnButton } from "./components/ReturnButton";
 // import {
 // 	LoginStateEnum,
 // 	useLoginStateContext,
@@ -21,7 +21,7 @@ function QrCodeFrom() {
 				<QRCode value="https://ant.design/" size={300} />
 				<p className="my-4 text-sm">{("sys.login.scanSign")}</p>
 			</div>
-			<ReturnButton />
+			{/* <ReturnButton /> */}
 		</>
 	);
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import joi from 'joi';
@@ -58,7 +60,7 @@ export function apiHandler(handler: Handler, options: ApiHandlerOptions = {}) {
 
       // 2. 准备请求数据
       let body = {};
-      let query: Query = {};
+      const query: Query = {};
       const url = new URL(req.url);
 
       url.searchParams.forEach((value, key) => {
@@ -70,6 +72,7 @@ export function apiHandler(handler: Handler, options: ApiHandlerOptions = {}) {
         try {
           body = await req.json();
         } catch (error) {
+          console.error('Error parsing JSON body:', error);
           if (req.headers.get('content-type')?.includes('application/json')) {
             return NextResponse.json(
               { message: 'Invalid JSON body' },

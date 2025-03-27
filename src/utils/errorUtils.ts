@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 //获取error并 返回字符串(兼容React Query的error)
 export const errorToString = (error: unknown) => {
   if (error instanceof Error) {

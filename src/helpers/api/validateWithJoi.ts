@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import joi from 'joi';
 const validateWithJoi = (
   schema: joi.Schema,

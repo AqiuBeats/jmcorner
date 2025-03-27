@@ -45,8 +45,7 @@ export default function HomePage() {
   } = useLoginOutMutation();
 
   //判断token是否失效
-  const { token, isTokenExpired, getTokenExpiration, clearToken } =
-    useAuthStore();
+  const { token, isTokenExpired } = useAuthStore();
 
   console.log('token', token);
   // if (isTokenExpired()) {

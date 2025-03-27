@@ -1,4 +1,5 @@
 'use client';
+
 import LoginForm from '@/components/login/LoginForm';
 // import MobileForm from '@/components/login/MobileForm';
 // import QrCodeFrom from '@/components/login/QrCodeForm';
@@ -8,10 +9,15 @@ import RegisterForm from '@/components/login/RegisterForm';
 import { LoginStateProvider } from '@/components/login/components/LoginStateProvider';
 import { AuroraBackground } from '@/components/ui/aurora-background';
 
+import { useSearchParams } from 'next/navigation';
+
 // const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
-const Login = ({ searchParams }: { searchParams: { loginState?: string } }) => {
-  const type = searchParams.loginState; //use现在是一个实验型API,不需要管
+const Login = () => {
+  const searchParams = useSearchParams();
+  const type = searchParams.get('loginState') ?? 0;
+  // const type = loginState;
+  // const type = searchParams?.loginState; // 添加可选链操作符
   console.log('type', type);
   // const { t } = useTranslation();
   // const token = useUserToken();

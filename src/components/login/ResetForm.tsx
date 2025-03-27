@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { SvgIcon } from "@/components/login/icon";
 
-import { ReturnButton } from "./components/ReturnButton";
+// import { ReturnButton } from "./components/ReturnButton";
 // import { LoginStateEnum, useLoginStateContext } from "./providers/LoginStateProvider";
 
 function ResetForm() {
@@ -33,7 +33,7 @@ function ResetForm() {
 					</Button>
 				</Form.Item>
 
-				<ReturnButton />
+				{/* <ReturnButton /> */}
 			</Form>
 		</>
 	);

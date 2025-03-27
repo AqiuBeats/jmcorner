@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { EXP_TIME } from '@/utils/constants';
 import { timeUTCToCN } from '@/utils/timeUtils';
 import { NextResponse } from 'next/server';

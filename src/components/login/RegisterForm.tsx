@@ -7,7 +7,6 @@ import { ReturnButton } from './components/ReturnButton';
 // import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 import { encodeAESData } from '@/utils/aesUtils';
 import { useCreateUserMutation } from '@/helpers/request';
 import {
@@ -15,7 +14,6 @@ import {
   useLoginStateContext,
 } from '@/components/login/components/LoginStateProvider';
 // import { User } from '@prisma/client';
-import { errorToString } from '@/utils/errorUtils';
 
 function RegisterForm() {
   // const { t } = useTranslation();

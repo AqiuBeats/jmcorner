@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { AuthService } from '@/helpers';
-import jwt from 'jsonwebtoken';
 import {
   REDIRECT_PATH,
   PUBLIC_PATHS,
@@ -67,7 +66,7 @@ export async function middleware(request: NextRequest) {
       // 页面路由重定向到登录页
       const loginUrl = new URL(REDIRECT_PATH, request.url);
       loginUrl.searchParams.set('redirect', pathname);
-      if (error instanceof jwt.TokenExpiredError) {
+      if (error instanceof Error) {
         loginUrl.searchParams.set('expired', 'true');
       }
 

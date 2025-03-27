@@ -28,11 +28,6 @@ export class AuthService {
         if (throwOnError) throw new Error('未授权，请先登录');
         return null;
       }
-
-      console.log('token', token);
-      console.log('token1', req.cookies.get('authToken')?.value);
-      console.log('token2', req.headers.get('authorization')?.split(' ')[1]);
-      console.log('secretKey', secretKey);
       const { payload } = await jwtVerify<AuthPayload>(token, secretKey);
 
       if (!payload.id) {
