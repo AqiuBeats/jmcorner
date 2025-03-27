@@ -14,8 +14,8 @@ services:
     actions:
       pre-deploy:
         - run: ls /usr/local/versions/node
-        - run: export PATH=/usr/local/versions/node/v22.13.0/bin:$PATH && npm install
-        - run: export PATH=/usr/local/versions/node/v22.13.0/bin:$PATH && npm run build
+        - run: export PATH=/usr/local/versions/node/v22.11.0/bin:$PATH && npm install
+        - run: export PATH=/usr/local/versions/node/v22.11.0/bin:$PATH && npm run build
         - run: cp -r public .next/standalone/public
         - run: mv static standalone/.next/static
           path: ./.next
