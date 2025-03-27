@@ -107,6 +107,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      prisma:
+        specifier: ^6.4.1
+        version: 6.5.0(typescript@5.8.2)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -198,9 +201,6 @@ importers:
       prettier:
         specifier: 3.5.3
         version: 3.5.3
-      prisma:
-        specifier: ^6.4.1
-        version: 6.5.0(typescript@5.8.2)
       prisma-erd-generator:
         specifier: ^2.0.4
         version: 2.0.4(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.2))(typescript@5.8.2))(puppeteer@23.11.1(typescript@5.8.2))(ts-node@10.9.2(@types/node@20.17.27)(typescript@5.8.2))(typescript@5.8.2)
