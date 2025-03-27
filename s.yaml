@@ -27,7 +27,7 @@ services:
         diskSize: 512
         caPort: 3000
         customRuntimeConfig:
-          command: ["pnpm"]
+          command: ["npm"]
           args: ["run", "start"]  # 确保这是正确的启动命令
       triggers:
         - name: httpTrigger
