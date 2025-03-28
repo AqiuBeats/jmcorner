@@ -26,21 +26,17 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# 复制依赖配置文件
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
-
-# 全局安装 pnpm
-RUN npm install -g pnpm
+# 复制生产环境依赖配置文件
+COPY --from=runner /app/package.json /app/pnpm-lock.yaml ./
 
 # 只安装生产环境依赖
 RUN pnpm install --prod
 
 # 复制构建产物、public 目录和 Prisma 客户端
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
+COPY --from=runner /app/public ./public
+COPY --from=runner /app/.next ./.next
 
-# 暴露 Next.js 默认端口
+# 暴露 Next.js 默认端口（仅文档化）
 EXPOSE 3000
 
 # 启动应用
