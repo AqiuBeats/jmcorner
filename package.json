@@ -19,6 +19,9 @@
       "eslint --fix"
     ]
   },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "dependencies": {
     "@ant-design/cssinjs": "^1.23.0",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
