@@ -10,8 +10,8 @@ WORKDIR /app
 # 复制 package.json 和 pnpm-lock.yaml
 COPY package.json pnpm-lock.yaml ./
 
-# 安装依赖(允许所有构建脚本)
-RUN pnpm install --frozen-lockfile --unsafe-perm --ignore-scripts=false
+# 安装依赖(允许所有构建脚本) --frozen-lockfile
+RUN pnpm install --unsafe-perm --ignore-scripts=false
 
 # 复制项目文件
 COPY . .
