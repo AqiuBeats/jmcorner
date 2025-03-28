@@ -1,5 +1,5 @@
 # 构建阶段
-FROM node:22 AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 
