@@ -4,10 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "prisma migrate deploy && next build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "db:migrate": "npx prisma migrate dev",
+    "db:reset": "prisma migrate reset && prisma migrate dev",
+    "db:studio": "prisma studio"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
