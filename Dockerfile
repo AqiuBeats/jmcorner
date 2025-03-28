@@ -36,7 +36,7 @@ RUN npm install -g pnpm
 RUN pnpm install --prod
 
 # 复制构建产物、public 目录和 Prisma 客户端
-COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 
