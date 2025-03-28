@@ -1,8 +1,5 @@
 # 使用 Node.js 22 作为基础镜像
-FROM node:22-alpine AS builder
-
-# 安装编译工具
-RUN apk add --no-cache python3 g++ make
+FROM node:22 AS builder
 
 # 安装 pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -24,9 +21,6 @@ RUN pnpm build
 
 # 生产环境镜像
 FROM node:22-alpine AS runner
-
-# 安装 pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
