@@ -27,6 +27,9 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
+# 检查 prisma 目录内容
+RUN ls -la /app
+
 # 从构建阶段复制必要的文件
 COPY --from=builder /app/package.json /app/pnpm-lock.yaml ./
 COPY --from=builder /app/node_modules ./node_modules
@@ -36,6 +39,12 @@ COPY --from=builder /app/prisma ./prisma
 
 # 安装 PM2 全局
 RUN npm install -g pm2
+
+# 检查 prisma 目录内容
+RUN ls -la /app/prisma  
+
+# 验证 prisma/schema.prisma 是否存在
+RUN if [ ! -f "prisma/schema.prisma" ]; then echo "Error: prisma/schema.prisma not found!" && exit 1; fi
 
 # 生成 Prisma 客户端
 RUN pnpm prisma generate
