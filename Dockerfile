@@ -1,5 +1,5 @@
 # 构建阶段
-FROM node:22-slim AS builder
+FROM node:22 AS runner
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN pnpm dlx prisma generate
 RUN pnpm run build
 
 # 运行阶段
-FROM node:22-slim
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -38,7 +38,7 @@ RUN pnpm install --prod
 # 复制构建产物、public 目录和 Prisma 客户端
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/.next ./.next
 
 # 暴露 Next.js 默认端口
 EXPOSE 3000
