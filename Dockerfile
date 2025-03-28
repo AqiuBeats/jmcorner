@@ -20,7 +20,7 @@ COPY . .
 RUN pnpm build
 
 # 生产环境镜像
-FROM node:22-alpine AS runner
+# FROM node:22-alpine AS runner
 
 WORKDIR /app
 
